@@ -1,28 +1,30 @@
+import Card from "../../../components/ui/Card";
 import CustomerNameInput from "../components/CustomerNameInput";
-import { useProjectStore } from "../../../store/projectStore";
+import InvestmentCard from "../components/InvestmentCard";
+import ConsumptionCard from "../components/ConsumptionCard";
 
 export default function ProjectPage() {
-  const customer = useProjectStore((state) => state.project.customer);
-
   return (
-    <>
-      <h2 className="text-3xl font-bold text-sky-700">
-        Projekt
-      </h2>
+    <div className="mx-auto max-w-5xl space-y-8">
 
-      <div className="mt-8">
+      <header>
+        <h1 className="text-4xl font-bold text-sky-700">
+          Projekt
+        </h1>
+
+        <p className="mt-2 text-slate-600">
+          Projektdaten für die Wirtschaftlichkeitsanalyse
+        </p>
+      </header>
+
+      <Card title="Kunde">
         <CustomerNameInput />
-      </div>
+      </Card>
 
-      <div className="mt-10 rounded-xl bg-white p-6 shadow">
-        <h3 className="mb-3 text-lg font-semibold">
-          Aktueller Store
-        </h3>
+     <InvestmentCard />
 
-        <pre className="text-sm">
-          {JSON.stringify(customer, null, 2)}
-        </pre>
-      </div>
-    </>
+     <ConsumptionCard />
+
+    </div>
   );
 }

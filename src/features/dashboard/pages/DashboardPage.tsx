@@ -1,13 +1,21 @@
+import CalculationSummary from "../components/CalculationSummary";
+
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-slate-100 p-8">
-      <h1 className="text-3xl font-bold text-sky-700">
-        Dashboard
-      </h1>
+    <div className="mx-auto max-w-5xl space-y-8">
 
-      <p className="mt-4 text-slate-600">
-        Willkommen zur EKD Wirtschaftlichkeitsanalyse.
-      </p>
-    </main>
+      <header>
+        <h1 className="text-4xl font-bold text-sky-700">
+          Dashboard
+        </h1>
+
+        <p className="mt-2 text-slate-600">
+          Übersicht der aktuellen Wirtschaftlichkeitsanalyse
+        </p>
+      </header>
+
+      <CalculationSummary />
+
+    </div>
   );
 }
