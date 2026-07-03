@@ -10,7 +10,7 @@ interface ProjectStore {
 
   resetProject: () => void;
 
-  updateCustomerName: (name: string) => void;
+  updateProject: (updater: (project: Project) => Project) => void;
 }
 
 export const useProjectStore = create<ProjectStore>((set) => ({
@@ -26,14 +26,8 @@ export const useProjectStore = create<ProjectStore>((set) => ({
       project: structuredClone(defaultProject),
     }),
 
-  updateCustomerName: (name) =>
+  updateProject: (updater) =>
     set((state) => ({
-      project: {
-        ...state.project,
-        customer: {
-          ...state.project.customer,
-          name,
-        },
-      },
+      project: updater(state.project),
     })),
 }));
