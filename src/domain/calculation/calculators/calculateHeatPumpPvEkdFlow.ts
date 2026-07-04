@@ -2,9 +2,11 @@ import type { Project } from "../../../types/project";
 
 export interface HeatPumpPvEkdFlowResult {
   feedInEnergy: number;
+  feedInTariff: number;
   feedInRevenue: number;
 
   gridConsumption: number;
+  gridTariff: number;
   gridPurchaseCost: number;
 
   reducedGridFees: number;
@@ -48,8 +50,10 @@ export function calculateHeatPumpPvEkdFlow(
 
   return {
     feedInEnergy,
+    feedInTariff: project.settings.feedInTariff,
     feedInRevenue,
     gridConsumption,
+    gridTariff: project.settings.ekdFlowElectricityPrice,
     gridPurchaseCost,
     reducedGridFees: project.settings.reducedGridFees,
     annualEnergyCost,

@@ -2,9 +2,11 @@ import type { Project } from "../../../types/project";
 
 export interface HeatPumpPvResult {
   feedInEnergy: number;
+  feedInTariff: number;
   feedInRevenue: number;
 
   gridConsumption: number;
+  gridTariff: number;
   gridPurchaseCost: number;
 
   annualEnergyCost: number;
@@ -43,8 +45,10 @@ export function calculateHeatPumpPv(
 
   return {
     feedInEnergy,
+    feedInTariff: project.settings.feedInTariff,
     feedInRevenue,
     gridConsumption,
+    gridTariff: project.settings.electricityPrice,
     gridPurchaseCost,
     annualEnergyCost,
     annualSavings,

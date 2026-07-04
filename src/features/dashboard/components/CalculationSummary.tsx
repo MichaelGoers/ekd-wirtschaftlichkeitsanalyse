@@ -1,11 +1,12 @@
 import KpiCard from "../../../components/ui/KpiCard";
+import { calculateAnnualSavings } from "../../../domain/calculation/services/calculateAnnualSavings";
 import { calculateAnalysis } from "../../../domain/calculation/services/calculateAnalysis";
 import { useProjectStore } from "../../../store/projectStore";
 import { formatCurrency } from "../../../utils/formatCurrency";
+import { formatEnergy } from "../../../utils/formatEnergy";
+import { formatEnergyTariff } from "../../../utils/formatEnergyTariff";
 import CalculationCard from "./CalculationCard";
-
-const formatEnergy = (value: number) =>
-  `${new Intl.NumberFormat("de-DE").format(value)} kWh`;
+import CurrentEnergyCostsCard from "./CurrentEnergyCostsCard";
 
 export default function CalculationSummary() {
   const project = useProjectStore((state) => state.project);
@@ -22,7 +23,7 @@ export default function CalculationSummary() {
         </p>
         <p className="mt-3 text-lg text-sky-100">
           Über den Betrachtungszeitraum von{" "}
-          {project.settings.analysisPeriodYears} Jahren mit Wärmepumpe,
+          {result.analysisPeriodYears} Jahren mit Wärmepumpe,
           PV-Anlage und EKDFlow
         </p>
       </section>
@@ -40,9 +41,10 @@ export default function CalculationSummary() {
             title="Gesamtinvestition"
             value={formatCurrency(result.investment.totalInvestment)}
           />
-          <KpiCard
-            title="Aktuelle jährliche Energiekosten"
-            value={formatCurrency(result.currentSituation.annualCost)}
+          <CurrentEnergyCostsCard
+            annualCost={result.currentSituation.annualCost}
+            periodCost={result.currentSituation.twentyYearCost}
+            periodYears={result.analysisPeriodYears}
           />
         </div>
       </section>
@@ -60,81 +62,98 @@ export default function CalculationSummary() {
         <div className="space-y-6">
           <CalculationCard
             title="Wärmepumpe"
-            steps={[
+            formulas={[
               {
-                label: "Gesamtverbrauch",
-                value: formatEnergy(result.heatPump.totalConsumption),
-              },
-              {
-                label: "Stromkosten für den Gesamtverbrauch",
-                value: formatCurrency(result.heatPump.annualElectricityCost),
+                label: "Strombedarf Wärmepumpe",
+                parts: [
+                  formatEnergy(result.heatPump.totalConsumption),
+                  "×",
+                  formatEnergyTariff(result.heatPump.electricityTariff),
+                ],
+                amount: formatCurrency(
+                  result.heatPump.annualElectricityCost,
+                ),
               },
             ]}
-            annualCost={formatCurrency(
+            total={formatCurrency(
               result.heatPump.annualElectricityCost,
+            )}
+            savings={formatCurrency(
+              calculateAnnualSavings(
+                result.currentSituation.annualCost,
+                result.heatPump.annualElectricityCost,
+              ),
             )}
           />
 
           <CalculationCard
             title="Wärmepumpe + PV"
-            steps={[
+            formulas={[
               {
-                label: "Eingespeiste Energie",
-                value: formatEnergy(result.heatPumpPv.feedInEnergy),
+                label: "Einspeisevergütung",
+                parts: [
+                  formatEnergy(result.heatPumpPv.feedInEnergy),
+                  "×",
+                  formatEnergyTariff(result.heatPumpPv.feedInTariff),
+                ],
+                amount: formatCurrency(-result.heatPumpPv.feedInRevenue),
               },
               {
-                label: "Abzüglich Einspeisevergütung",
-                value: `− ${formatCurrency(result.heatPumpPv.feedInRevenue)}`,
-              },
-              {
-                label: "Netzbezug",
-                value: formatEnergy(result.heatPumpPv.gridConsumption),
-              },
-              {
-                label: "Kosten des Netzbezugs",
-                value: formatCurrency(result.heatPumpPv.gridPurchaseCost),
+                label: "Netzstrombezug",
+                parts: [
+                  formatEnergy(result.heatPumpPv.gridConsumption),
+                  "×",
+                  formatEnergyTariff(result.heatPumpPv.gridTariff),
+                ],
+                amount: formatCurrency(result.heatPumpPv.gridPurchaseCost),
               },
             ]}
-            annualCost={formatCurrency(result.heatPumpPv.annualEnergyCost)}
-            annualSavings={formatCurrency(result.heatPumpPv.annualSavings)}
+            total={formatCurrency(result.heatPumpPv.annualEnergyCost)}
+            savings={formatCurrency(result.heatPumpPv.annualSavings)}
           />
 
           <CalculationCard
             title="Wärmepumpe + PV + EKDFlow"
-            steps={[
+            formulas={[
               {
-                label: "Eingespeiste Energie",
-                value: formatEnergy(result.heatPumpPvEkdFlow.feedInEnergy),
-              },
-              {
-                label: "Abzüglich Einspeisevergütung",
-                value: `− ${formatCurrency(
-                  result.heatPumpPvEkdFlow.feedInRevenue,
-                )}`,
-              },
-              {
-                label: "Netzbezug",
-                value: formatEnergy(
-                  result.heatPumpPvEkdFlow.gridConsumption,
+                label: "Einspeisevergütung",
+                parts: [
+                  formatEnergy(result.heatPumpPvEkdFlow.feedInEnergy),
+                  "×",
+                  formatEnergyTariff(
+                    result.heatPumpPvEkdFlow.feedInTariff,
+                  ),
+                ],
+                amount: formatCurrency(
+                  -result.heatPumpPvEkdFlow.feedInRevenue,
                 ),
               },
               {
-                label: "Kosten des Netzbezugs",
-                value: formatCurrency(
+                label: "Netzstrombezug",
+                parts: [
+                  formatEnergy(result.heatPumpPvEkdFlow.gridConsumption),
+                  "×",
+                  formatEnergyTariff(
+                    result.heatPumpPvEkdFlow.gridTariff,
+                  ),
+                ],
+                amount: formatCurrency(
                   result.heatPumpPvEkdFlow.gridPurchaseCost,
                 ),
               },
               {
-                label: "Abzüglich reduzierter Netzentgelte",
-                value: `− ${formatCurrency(
-                  result.heatPumpPvEkdFlow.reducedGridFees,
-                )}`,
+                label: "Reduzierung Netzentgelte",
+                parts: [],
+                amount: formatCurrency(
+                  -result.heatPumpPvEkdFlow.reducedGridFees,
+                ),
+                showEquals: false,
               },
             ]}
-            annualCost={formatCurrency(
+            total={formatCurrency(
               result.heatPumpPvEkdFlow.annualEnergyCost,
             )}
-            annualSavings={formatCurrency(
+            savings={formatCurrency(
               result.heatPumpPvEkdFlow.annualSavings,
             )}
             highlighted

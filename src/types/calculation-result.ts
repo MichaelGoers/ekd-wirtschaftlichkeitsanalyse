@@ -9,14 +9,17 @@ export interface InvestmentResult {
 
 export interface HeatPumpResult {
   totalConsumption: number;
+  electricityTariff: number;
   annualElectricityCost: number;
 }
 
 export interface HeatPumpPvResult {
   feedInEnergy: number;
+  feedInTariff: number;
   feedInRevenue: number;
 
   gridConsumption: number;
+  gridTariff: number;
   gridPurchaseCost: number;
 
   annualEnergyCost: number;
@@ -25,9 +28,11 @@ export interface HeatPumpPvResult {
 
 export interface HeatPumpPvEkdFlowResult {
   feedInEnergy: number;
+  feedInTariff: number;
   feedInRevenue: number;
 
   gridConsumption: number;
+  gridTariff: number;
   gridPurchaseCost: number;
 
   reducedGridFees: number;
@@ -37,6 +42,8 @@ export interface HeatPumpPvEkdFlowResult {
 }
 
 export interface CalculationResult {
+  analysisPeriodYears: number;
+
   currentSituation: CurrentSituationResult;
 
   investment: InvestmentResult;

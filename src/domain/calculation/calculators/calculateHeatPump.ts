@@ -2,6 +2,7 @@ import type { Project } from "../../../types/project";
 
 export interface HeatPumpResult {
   totalConsumption: number;
+  electricityTariff: number;
   annualElectricityCost: number;
 }
 
@@ -18,6 +19,7 @@ export function calculateHeatPump(
 
   return {
     totalConsumption,
+    electricityTariff: project.settings.electricityPrice,
     annualElectricityCost,
   };
 }

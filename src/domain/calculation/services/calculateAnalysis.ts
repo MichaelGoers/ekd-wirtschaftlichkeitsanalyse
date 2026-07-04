@@ -27,6 +27,7 @@ export function calculateAnalysis(
   );
 
   return {
+    analysisPeriodYears: project.settings.analysisPeriodYears,
     currentSituation,
     investment,
     heatPump,

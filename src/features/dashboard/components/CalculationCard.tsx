@@ -1,75 +1,87 @@
 import Card from "../../../components/ui/Card";
 
-interface CalculationStep {
+interface CalculationFormula {
   label: string;
-  value: string;
+  parts: string[];
+  amount: string;
+  showEquals?: boolean;
 }
 
 interface CalculationCardProps {
   title: string;
-  steps: CalculationStep[];
-  annualCost: string;
-  annualSavings?: string;
+  formulas: CalculationFormula[];
+  total: string;
+  savings: string;
   highlighted?: boolean;
+}
+
+interface ProtocolRowProps {
+  label: string;
+  formula?: string;
+  amount: string;
+  amountClassName?: string;
+}
+
+function ProtocolRow({
+  label,
+  formula,
+  amount,
+  amountClassName = "text-slate-900",
+}: ProtocolRowProps) {
+  return (
+    <div className="grid gap-1 sm:grid-cols-[11rem_minmax(0,1fr)_8rem] sm:items-baseline sm:gap-6 lg:grid-cols-[14rem_minmax(0,1fr)_10rem]">
+      <span className="font-medium text-slate-700">{label}</span>
+      <span className="min-w-0 text-left font-medium text-slate-800">
+        {formula}
+      </span>
+      <span
+        className={`text-right font-semibold tabular-nums ${amountClassName}`}
+      >
+        {amount}
+      </span>
+    </div>
+  );
 }
 
 export default function CalculationCard({
   title,
-  steps,
-  annualCost,
-  annualSavings,
+  formulas,
+  total,
+  savings,
   highlighted = false,
 }: CalculationCardProps) {
   return (
     <Card title={title}>
-      <ol className="space-y-5">
-        {steps.map((step, index) => (
-          <li
-            key={step.label}
-            className="flex items-start gap-4"
-          >
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sky-50 text-sm font-semibold text-sky-700">
-              {index + 1}
-            </span>
-
-            <div className="min-w-0 flex-1">
-              <p className="text-sm text-slate-500">{step.label}</p>
-              <p className="mt-1 break-words text-lg font-semibold text-slate-900">
-                {step.value}
-              </p>
-            </div>
-          </li>
+      <div className="space-y-3">
+        {formulas.map((formula) => (
+          <ProtocolRow
+            key={`${formula.label}-${formula.parts.join("-")}`}
+            label={formula.label}
+            formula={`${formula.parts.join(" ")}${
+              formula.showEquals === false ? "" : " ="
+            }`}
+            amount={formula.amount}
+          />
         ))}
-      </ol>
+      </div>
 
-      <div
-        className={`rounded-xl p-4 ${
-          highlighted
-            ? "bg-green-50 ring-1 ring-green-200"
-            : "bg-slate-50 ring-1 ring-slate-200"
-        }`}
-      >
-        <p className="text-sm font-medium text-slate-600">
-          Jährliche Energiekosten
-        </p>
-        <p
-          className={`mt-1 text-2xl font-bold ${
+      <div className="space-y-4 border-t border-slate-300 pt-4">
+        <ProtocolRow
+          label="Jährliche Energiekosten"
+          amount={total}
+          amountClassName={`text-xl font-bold ${
             highlighted ? "text-green-700" : "text-slate-900"
           }`}
-        >
-          {annualCost}
-        </p>
+        />
 
-        {annualSavings && (
-          <div className="mt-3 border-t border-current/10 pt-3">
-            <p className="text-sm text-slate-600">
-              Ersparnis gegenüber heute
-            </p>
-            <p className="mt-1 font-semibold text-green-700">
-              {annualSavings} pro Jahr
-            </p>
-          </div>
-        )}
+        <div className="flex items-center justify-center gap-3 rounded-xl bg-green-50 p-6 ring-1 ring-green-200 sm:gap-8">
+          <span className="whitespace-nowrap text-xs font-bold text-green-900 sm:text-lg">
+            Ersparnis gegenüber heute
+          </span>
+          <span className="whitespace-nowrap text-right text-base font-bold tabular-nums text-green-700 sm:text-xl">
+            {savings}
+          </span>
+        </div>
       </div>
     </Card>
   );
