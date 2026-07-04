@@ -27,6 +27,13 @@ export default function MainLayout() {
             Projekt
           </NavLink>
 
+          <NavLink
+            to="/settings"
+            className="block rounded p-2 hover:bg-slate-200"
+          >
+            Einstellungen
+          </NavLink>
+
         </nav>
 
       </aside>

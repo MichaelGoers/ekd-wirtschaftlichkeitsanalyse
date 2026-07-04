@@ -1,75 +1,96 @@
-# React + TypeScript + Vite
+# EKD Wirtschaftlichkeitsanalyse
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Die EKD Wirtschaftlichkeitsanalyse ist eine browserbasierte Beratungsanwendung
+zum Vergleich der laufenden Energiekosten einer bestehenden Versorgung mit
+verschiedenen Wärmepumpen- und Photovoltaik-Szenarien.
 
-Currently, two official plugins are available:
+## Funktionen
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Erfassung von Kunden-, Investitions- und Verbrauchsdaten
+- Vergleich der aktuellen Situation mit:
+  - Wärmepumpe
+  - Wärmepumpe und Photovoltaik
+  - Wärmepumpe, Photovoltaik und EKDFlow
+- Darstellung zentraler Kosten- und Ersparniskennzahlen
+- Zentrale, von der Benutzeroberfläche getrennte Berechnungslogik
 
-## React Compiler
+Die Anwendung arbeitet derzeit vollständig im Browser. Projektdaten werden
+nicht dauerhaft gespeichert und gehen beim Neuladen der Seite verloren.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologie
 
-## Expanding the ESLint configuration
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Zustand
+- Tailwind CSS
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Projektstruktur
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+src/
+├── components/
+│   ├── layout/             Übergreifendes Anwendungslayout
+│   └── ui/                 Wiederverwendbare UI-Komponenten
+├── domain/
+│   ├── calculation/        Berechnungen, Standardwerte und Analyse-Service
+│   └── project/            Standardprojekt
+├── features/
+│   ├── dashboard/          Ergebnisübersicht
+│   └── project/            Erfassung der Projektdaten
+├── store/                  Globaler Projektzustand
+├── types/                  Projekt- und Ergebnistypen
+├── utils/                  Formatierungsfunktionen
+├── router.tsx              Routing-Konfiguration
+└── main.tsx                Einstiegspunkt
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Die Berechnungslogik befindet sich ausschließlich unter
+`src/domain/calculation`. React-Komponenten greifen über den zentralen
+Analyse-Service darauf zu.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Lokale Entwicklung
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Voraussetzung ist eine aktuelle Node.js-Version.
 
+```bash
+npm install
+npm run dev
 ```
+
+Vite gibt anschließend die lokale Adresse der Anwendung aus.
+
+## Verfügbare Skripte
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
+
+- `npm run dev` startet den Entwicklungsserver.
+- `npm run build` führt die TypeScript-Prüfung aus und erstellt den
+  Produktions-Build.
+- `npm run lint` prüft den Quellcode mit ESLint.
+- `npm run preview` zeigt den erstellten Produktions-Build lokal an.
+
+## Routen
+
+- `/` – Dashboard und Kostenvergleich
+- `/project` – Eingabe der Kunden-, Investitions- und Verbrauchsdaten
+
+## Fachlicher Rahmen
+
+Die Anwendung bildet ausschließlich die vorgegebenen Regeln der
+EKD-Wirtschaftlichkeitsanalyse ab. Sie verwendet keine finanzmathematischen
+Modelle wie Inflation, Barwert, Finanzierung, Kapitalwert oder Rendite.
+
+Die aktuell implementierten Formeln sind unter
+[`docs/calculations.md`](docs/calculations.md) dokumentiert.
+
+## Projektregeln
+
+Die verbindlichen Entwicklungs- und Fachregeln stehen in
+[`AGENTS.md`](AGENTS.md).

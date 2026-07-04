@@ -6,6 +6,8 @@ import DashboardPage from "./features/dashboard/pages/DashboardPage";
 
 import ProjectPage from "./features/project/pages/ProjectPage";
 
+import SettingsPage from "./features/settings/pages/SettingsPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -19,6 +21,10 @@ export const router = createBrowserRouter([
       {
         path: "project",
         element: <ProjectPage />,
+      },
+      {
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },
