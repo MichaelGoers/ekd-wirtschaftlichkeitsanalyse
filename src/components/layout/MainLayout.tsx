@@ -2,15 +2,15 @@ import { NavLink, Outlet } from "react-router-dom";
 
 export default function MainLayout() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
 
-      <aside className="w-64 border-r bg-slate-100 p-6">
+      <aside className="border-b bg-slate-100 p-5 md:w-64 md:border-b-0 md:border-r md:p-6">
 
-        <h1 className="mb-8 text-xl font-bold text-sky-700">
+        <h1 className="mb-4 text-xl font-bold text-sky-700 md:mb-8">
           EKD Analyse
         </h1>
 
-        <nav className="space-y-2">
+        <nav className="flex flex-wrap gap-2 md:block md:space-y-2">
 
           <NavLink
             to="/"
@@ -38,7 +38,7 @@ export default function MainLayout() {
 
       </aside>
 
-      <main className="flex-1 p-8">
+      <main className="min-w-0 flex-1 p-4 sm:p-6 md:p-8">
         <Outlet />
       </main>
 

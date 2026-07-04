@@ -35,7 +35,7 @@ export function calculateHeatPumpPvEkdFlow(
 
   const gridPurchaseCost =
     gridConsumption *
-    project.settings.electricityPrice;
+    project.settings.ekdFlowElectricityPrice;
 
   const annualEnergyCost =
     gridPurchaseCost
