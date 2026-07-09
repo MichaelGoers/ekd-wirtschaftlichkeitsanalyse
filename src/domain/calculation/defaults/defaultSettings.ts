@@ -12,4 +12,10 @@ export const defaultSettings: Settings = {
   gridConsumptionShare: 0.30,
 
   reducedGridFees: 450,
+
+  standardHeatPumpCop: 4.0,
+
+  heatingOilCalorificValue: 10.0,
+
+  electricVehicleConsumption: 18.0,
 };

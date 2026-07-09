@@ -10,4 +10,10 @@ export interface Settings {
   gridConsumptionShare: number;
 
   reducedGridFees: number;
+
+  standardHeatPumpCop: number;
+
+  heatingOilCalorificValue: number;
+
+  electricVehicleConsumption: number;
 }

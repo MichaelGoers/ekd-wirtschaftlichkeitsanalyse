@@ -5,6 +5,14 @@ import PercentageField from "../../../components/ui/PercentageField";
 import { useProjectStore } from "../../../store/projectStore";
 import type { Settings } from "../../../types/settings";
 
+function FieldDescription({ children }: { children: string }) {
+  return (
+    <p className="mt-2 text-sm leading-5 text-slate-500">
+      {children}
+    </p>
+  );
+}
+
 export default function SettingsPage() {
   const settings = useProjectStore((state) => state.project.settings);
   const updateProject = useProjectStore((state) => state.updateProject);
@@ -37,6 +45,7 @@ export default function SettingsPage() {
             label="Betrachtungszeitraum"
             value={settings.analysisPeriodYears}
             suffix="Jahre"
+            withoutStepper
             onChange={(value) => updateSetting("analysisPeriodYears", value)}
           />
 
@@ -44,6 +53,7 @@ export default function SettingsPage() {
             label="Strompreis"
             value={settings.electricityPrice}
             suffix="€/kWh"
+            withoutStepper
             onChange={(value) => updateSetting("electricityPrice", value)}
           />
 
@@ -51,6 +61,7 @@ export default function SettingsPage() {
             label="EKDFlow-Strompreis"
             value={settings.ekdFlowElectricityPrice}
             suffix="€/kWh"
+            withoutStepper
             onChange={(value) => updateSetting("ekdFlowElectricityPrice", value)}
           />
         </Card>
@@ -60,26 +71,72 @@ export default function SettingsPage() {
             label="Einspeisevergütung"
             value={settings.feedInTariff}
             suffix="€/kWh"
+            withoutStepper
             onChange={(value) => updateSetting("feedInTariff", value)}
           />
 
           <PercentageField
             label="Einspeiseanteil"
             value={settings.feedInShare}
+            withoutStepper
             onChange={(value) => updateSetting("feedInShare", value)}
           />
 
           <PercentageField
             label="Netzbezugsanteil"
             value={settings.gridConsumptionShare}
+            withoutStepper
             onChange={(value) => updateSetting("gridConsumptionShare", value)}
           />
 
           <CurrencyField
             label="Reduzierung Netzentgelte"
             value={settings.reducedGridFees}
+            withoutStepper
             onChange={(value) => updateSetting("reducedGridFees", value)}
           />
+        </Card>
+
+        <Card title="Wärmepumpe">
+          <NumberField
+            label="Standard-COP"
+            value={settings.standardHeatPumpCop}
+            withoutStepper
+            onChange={(value) => updateSetting("standardHeatPumpCop", value)}
+          />
+          <FieldDescription>
+            Standard-COP für die Umrechnung von Heizenergie in Wärmepumpenstrom.
+          </FieldDescription>
+        </Card>
+
+        <Card title="Heizöl">
+          <NumberField
+            label="Heizwert Heizöl"
+            value={settings.heatingOilCalorificValue}
+            suffix="kWh/Liter"
+            withoutStepper
+            onChange={(value) =>
+              updateSetting("heatingOilCalorificValue", value)
+            }
+          />
+          <FieldDescription>
+            Standard-Heizwert zur Umrechnung von Litern Heizöl in kWh Wärme.
+          </FieldDescription>
+        </Card>
+
+        <Card title="Elektroauto">
+          <NumberField
+            label="Durchschnittlicher Stromverbrauch"
+            value={settings.electricVehicleConsumption}
+            suffix="kWh / 100 km"
+            withoutStepper
+            onChange={(value) =>
+              updateSetting("electricVehicleConsumption", value)
+            }
+          />
+          <FieldDescription>
+            Standardverbrauch zur Berechnung des zusätzlichen Strombedarfs eines Elektrofahrzeugs.
+          </FieldDescription>
         </Card>
       </div>
     </div>
