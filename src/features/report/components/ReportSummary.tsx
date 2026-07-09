@@ -61,7 +61,6 @@ export default function ReportSummary({
           <SummaryLine
             label="KfW-Förderung"
             value={formatCurrency(-project.investment.kfwFunding)}
-            muted
           />
           <SummaryLine
             label="Photovoltaikanlage"
@@ -93,17 +92,17 @@ export default function ReportSummary({
           />
         </div>
         <div className="mt-1.5 space-y-1 border-t-2 border-slate-900 pt-1.5">
-          <div className="flex items-baseline justify-between gap-6">
-            <span className="font-bold text-slate-950">
+          <div className="flex items-baseline justify-between gap-6 text-base font-bold leading-normal text-slate-950">
+            <span>
               Jährliche Energiekosten
             </span>
-            <span className="text-right font-bold tabular-nums text-slate-950">
+            <span className="text-right tabular-nums">
               {formatCurrency(result.currentSituation.annualCost)}
             </span>
           </div>
-          <div className="flex items-baseline justify-between gap-6 text-sm text-slate-600">
+          <div className="flex items-baseline justify-between gap-6 text-base font-bold leading-normal text-slate-950">
             <span>In {result.analysisPeriodYears} Jahren</span>
-            <span className="text-right font-medium tabular-nums">
+            <span className="text-right tabular-nums text-red-600">
               {formatCurrency(result.currentSituation.twentyYearCost)}
             </span>
           </div>

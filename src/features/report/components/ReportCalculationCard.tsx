@@ -26,7 +26,7 @@ function ReportProtocolRow({
   strong = false,
 }: ReportProtocolRowProps) {
   return (
-    <div className="grid gap-1 py-0.5 text-[0.74rem] leading-4 sm:grid-cols-[7.1rem_minmax(14.5rem,1fr)_5.4rem] sm:items-baseline sm:gap-2.5">
+    <div className="grid gap-1 py-[0.1875rem] text-[0.74rem] leading-4 sm:grid-cols-[7.1rem_minmax(14.5rem,1fr)_5.4rem] sm:items-baseline sm:gap-2.5">
       <span
         className={
           strong
@@ -86,7 +86,7 @@ export default function ReportCalculationCard({
 
         <div className="mt-1 flex items-center justify-center gap-8 border-y border-green-200 py-1 text-green-800">
           <span className="text-sm font-semibold">
-            Ersparnis gegenüber heute
+            Jährliche Ersparnis gegenüber heute
           </span>
           <span className="text-right text-base font-semibold tabular-nums">
             {savings}

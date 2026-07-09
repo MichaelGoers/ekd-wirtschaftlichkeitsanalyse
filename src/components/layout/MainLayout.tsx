@@ -34,6 +34,13 @@ export default function MainLayout() {
             Einstellungen
           </NavLink>
 
+          <NavLink
+            to="/pdf-report"
+            className="block rounded p-2 hover:bg-slate-200"
+          >
+            PDF Report
+          </NavLink>
+
         </nav>
 
       </aside>

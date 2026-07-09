@@ -10,6 +10,8 @@ import SettingsPage from "./features/settings/pages/SettingsPage";
 
 import ReportPage from "./features/report/pages/ReportPage";
 
+import PdfReportPage from "./features/pdf/pages/PdfReportPage";
+
 export const router = createBrowserRouter([
   {
     path: "/report",
@@ -31,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "pdf-report",
+        element: <PdfReportPage />,
       },
     ],
   },

@@ -35,3 +35,11 @@ Negative jährliche Energiekosten sind zulässig.
 Alle Berechnungen orientieren sich ausschließlich an den fachlichen Vorgaben der EKD-Wirtschaftlichkeitsanalyse.
 
 Es werden keine finanzmathematischen Modelle eingeführt, sofern diese nicht ausdrücklich gefordert sind.
+
+Ab Sprint P1 gilt ausschließlich die PDF-Ausgabe als Referenz.
+
+Der Browser-Report dient nur noch als historische Layoutvorlage.
+
+Neue Layoutänderungen werden ausschließlich an den PDF-Komponenten umgesetzt.
+
+Der Browser-Report wird nicht mehr angepasst.

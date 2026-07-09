@@ -22,12 +22,12 @@ export default function ReportCalculations({
         </h2>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <ReportCalculationCard
           title="Wärmepumpe"
           formulas={[
             {
-              label: "Strombedarf Wärmepumpe",
+              label: "Strombedarf",
               parts: [
                 formatEnergy(result.heatPump.totalConsumption),
                 "×",
