@@ -22,5 +22,26 @@ export const defaultProject: Project = {
     photovoltaicYield: 0,
   },
 
+  householdElectricity: {
+    annualConsumption: 0,
+    monthlyPayment: 0,
+    annualBill: 0,
+  },
+
+  existingHeating: {
+    type: "gas",
+    gasAnnualConsumption: 0,
+    gasMonthlyPayment: 0,
+    gasAnnualBill: 0,
+    oilAnnualConsumption: 0,
+    oilPricePerLiter: 0,
+    oilAnnualBill: 0,
+  },
+
+  electricVehicle: {
+    enabled: false,
+    annualMileage: 0,
+  },
+
   settings: defaultSettings,
 };

@@ -43,3 +43,19 @@ Der Browser-Report dient nur noch als historische Layoutvorlage.
 Neue Layoutänderungen werden ausschließlich an den PDF-Komponenten umgesetzt.
 
 Der Browser-Report wird nicht mehr angepasst.
+
+## Alternative Eingaben
+
+Wenn zwei Eingabefelder alternativ verwendet werden können,
+ist zwischen beiden Feldern immer folgende Darstellung zu verwenden:
+
+oder ───────────────────────────────
+
+Regeln:
+
+- "oder" immer kleingeschrieben
+- linksbündig
+- normale Schriftstärke
+- sekundäre Textfarbe
+- 1 px horizontale Linie
+- kein zusätzlicher Hilfetext

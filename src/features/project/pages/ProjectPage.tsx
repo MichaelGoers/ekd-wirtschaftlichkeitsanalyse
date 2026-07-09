@@ -2,6 +2,9 @@ import Card from "../../../components/ui/Card";
 import CustomerNameInput from "../components/CustomerNameInput";
 import InvestmentCard from "../components/InvestmentCard";
 import ConsumptionCard from "../components/ConsumptionCard";
+import HouseholdElectricityCard from "../components/HouseholdElectricityCard";
+import ExistingHeatingCard from "../components/ExistingHeatingCard";
+import ElectricVehicleCard from "../components/ElectricVehicleCard";
 
 export default function ProjectPage() {
   return (
@@ -22,6 +25,12 @@ export default function ProjectPage() {
       </Card>
 
      <InvestmentCard />
+
+     <HouseholdElectricityCard />
+
+     <ExistingHeatingCard />
+
+     <ElectricVehicleCard />
 
      <ConsumptionCard />
 
