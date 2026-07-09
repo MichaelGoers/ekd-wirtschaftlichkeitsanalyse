@@ -11,6 +11,7 @@ export interface HeatPumpResult {
   totalConsumption: number;
   electricityTariff: number;
   annualElectricityCost: number;
+  annualSavings: number;
 }
 
 export interface HeatPumpPvResult {

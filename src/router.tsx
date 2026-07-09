@@ -8,7 +8,13 @@ import ProjectPage from "./features/project/pages/ProjectPage";
 
 import SettingsPage from "./features/settings/pages/SettingsPage";
 
+import ReportPage from "./features/report/pages/ReportPage";
+
 export const router = createBrowserRouter([
+  {
+    path: "/report",
+    element: <ReportPage />,
+  },
   {
     path: "/",
     element: <MainLayout />,

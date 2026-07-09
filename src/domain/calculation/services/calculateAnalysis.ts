@@ -14,7 +14,14 @@ export function calculateAnalysis(
 
   const investment = calculateInvestment(project);
 
-  const heatPump = calculateHeatPump(project);
+  const heatPumpBase = calculateHeatPump(project);
+
+  const heatPump = {
+    ...heatPumpBase,
+    annualSavings:
+      currentSituation.annualCost -
+      heatPumpBase.annualElectricityCost,
+  };
 
   const heatPumpPv = calculateHeatPumpPv(
     project,

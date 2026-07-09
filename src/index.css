@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+.report-page-shell {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  overflow: hidden;
+  padding: 2rem 1rem;
+}
+
+.report-page-sheet {
+  aspect-ratio: 297 / 210;
+  width: min(
+    297mm,
+    calc(100vw - 2rem),
+    calc((100vh - 4rem) * 297 / 210)
+  );
+}
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+@media print {
+  .report-page-shell {
+    display: block;
+    height: 210mm;
+    padding: 0;
+  }
+
+  .report-page-sheet {
+    aspect-ratio: auto;
+    height: 210mm;
+    width: 297mm;
+  }
+}
