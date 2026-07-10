@@ -125,3 +125,5 @@ Nicht in Versalien schreiben.
 Automatisch berechnete Empfehlungen dürfen durch Benutzereingaben nicht verändert werden.
 
 Benutzereingaben (z. B. "Gewünschte Leistung") beeinflussen ausschließlich die nachgelagerte Wirtschaftlichkeitsberechnung.
+
+Corporate Design ist abgeschlossen. Änderungen am Erscheinungsbild erfolgen künftig nur noch, wenn sie einen konkreten funktionalen oder ergonomischen Nutzen haben.
