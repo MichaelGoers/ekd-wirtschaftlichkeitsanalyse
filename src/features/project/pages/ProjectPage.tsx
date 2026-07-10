@@ -5,6 +5,7 @@ import ConsumptionCard from "../components/ConsumptionCard";
 import HouseholdElectricityCard from "../components/HouseholdElectricityCard";
 import ExistingHeatingCard from "../components/ExistingHeatingCard";
 import ElectricVehicleCard from "../components/ElectricVehicleCard";
+import PhotovoltaicCard from "../components/PhotovoltaicCard";
 
 export default function ProjectPage() {
   return (
@@ -31,6 +32,8 @@ export default function ProjectPage() {
      <ExistingHeatingCard />
 
      <ElectricVehicleCard />
+
+     <PhotovoltaicCard />
 
      <ConsumptionCard />
 

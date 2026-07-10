@@ -16,4 +16,10 @@ export interface Settings {
   heatingOilCalorificValue: number;
 
   electricVehicleConsumption: number;
+
+  photovoltaicModulePower: number;
+
+  photovoltaicNightConsumptionShare: number;
+
+  photovoltaicStorageTolerance: number;
 }

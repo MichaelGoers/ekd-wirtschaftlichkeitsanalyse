@@ -18,4 +18,10 @@ export const defaultSettings: Settings = {
   heatingOilCalorificValue: 10.0,
 
   electricVehicleConsumption: 18.0,
+
+  photovoltaicModulePower: 485,
+
+  photovoltaicNightConsumptionShare: 0.60,
+
+  photovoltaicStorageTolerance: 0.5,
 };

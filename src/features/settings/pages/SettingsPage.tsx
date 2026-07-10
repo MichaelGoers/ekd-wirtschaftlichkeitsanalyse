@@ -138,6 +138,44 @@ export default function SettingsPage() {
             Standardverbrauch zur Berechnung des zusätzlichen Strombedarfs eines Elektrofahrzeugs.
           </FieldDescription>
         </Card>
+
+        <Card title="Photovoltaik">
+          <NumberField
+            label="Modulleistung"
+            value={settings.photovoltaicModulePower}
+            suffix="Wp"
+            withoutStepper
+            onChange={(value) => updateSetting("photovoltaicModulePower", value)}
+          />
+          <FieldDescription>
+            Standardleistung eines PV-Moduls.
+          </FieldDescription>
+
+          <PercentageField
+            label="Nachtstromanteil"
+            value={settings.photovoltaicNightConsumptionShare}
+            withoutStepper
+            onChange={(value) =>
+              updateSetting("photovoltaicNightConsumptionShare", value)
+            }
+          />
+          <FieldDescription>
+            Anteil des täglichen Stromverbrauchs, der nachts aus dem Speicher gedeckt werden soll.
+          </FieldDescription>
+
+          <NumberField
+            label="Speicher-Toleranz"
+            value={settings.photovoltaicStorageTolerance}
+            suffix="kWh"
+            withoutStepper
+            onChange={(value) =>
+              updateSetting("photovoltaicStorageTolerance", value)
+            }
+          />
+          <FieldDescription>
+            Liegt der berechnete Nachtstrom höchstens um diesen Wert über einer Speichergröße, wird noch die kleinere Speichergröße empfohlen.
+          </FieldDescription>
+        </Card>
       </div>
     </div>
   );
