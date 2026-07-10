@@ -14,10 +14,10 @@ export default function ReportCalculations({
   return (
     <section className="min-w-0 space-y-2">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-orange-600">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ekd-primary">
           Berechnungsprotokoll
         </p>
-        <h2 className="mt-1 text-[1.05rem] font-semibold tracking-tight text-slate-950">
+        <h2 className="mt-1 text-[1.05rem] font-semibold tracking-tight text-ekd-text">
           Vergleich der drei Versorgungslösungen
         </h2>
       </div>

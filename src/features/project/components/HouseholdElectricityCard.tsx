@@ -98,22 +98,22 @@ export default function HouseholdElectricityCard() {
         }}
       />
 
-      <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-        <h3 className="text-sm font-semibold text-slate-700">
+      <div className="rounded-xl border border-ekd-border bg-ekd-background p-4 shadow-sm shadow-ekd-text/5">
+        <h3 className="text-sm font-semibold text-ekd-text-secondary">
           Automatisch berechnet
         </h3>
 
-        <dl className="mt-3 space-y-2 text-sm text-slate-600">
+        <dl className="mt-3 space-y-2 text-sm text-ekd-text-secondary">
           <div className="flex items-center justify-between gap-6">
             <dt>Jährliche Stromkosten</dt>
-            <dd className="font-medium tabular-nums text-slate-800">
+            <dd className="font-medium tabular-nums text-ekd-text">
               {formatOptionalCurrency(result.annualElectricityCost)}
             </dd>
           </div>
 
           <div className="flex items-center justify-between gap-6">
             <dt>Ø Strompreis</dt>
-            <dd className="font-medium tabular-nums text-slate-800">
+            <dd className="font-medium tabular-nums text-ekd-text">
               {formatOptionalEnergyTariff(result.averageElectricityPrice)}
             </dd>
           </div>

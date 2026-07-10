@@ -1,12 +1,18 @@
 import { NavLink, Outlet } from "react-router-dom";
 
+const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  [
+    "block rounded p-2 hover:bg-ekd-border",
+    isActive ? "text-ekd-primary" : "text-ekd-text",
+  ].join(" ");
+
 export default function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
 
-      <aside className="border-b bg-slate-100 p-5 md:w-64 md:border-b-0 md:border-r md:p-6">
+      <aside className="border-b bg-ekd-background p-5 md:w-64 md:border-b-0 md:border-r md:p-6">
 
-        <h1 className="mb-4 text-xl font-bold text-sky-700 md:mb-8">
+        <h1 className="mb-4 text-xl font-bold text-ekd-primary md:mb-8">
           EKD Analyse
         </h1>
 
@@ -14,7 +20,7 @@ export default function MainLayout() {
 
           <NavLink
             to="/project"
-            className="block rounded p-2 hover:bg-slate-200"
+            className={getNavLinkClassName}
           >
             Projekt
           </NavLink>
@@ -22,22 +28,22 @@ export default function MainLayout() {
           <NavLink
             to="/"
             end
-            className="block rounded p-2 hover:bg-slate-200"
+            className={getNavLinkClassName}
           >
             Auswertung
           </NavLink>
 
           <NavLink
             to="/pdf-report"
-            className="block rounded p-2 hover:bg-slate-200"
+            className={getNavLinkClassName}
           >
             PDF Report
           </NavLink>
 
-          <div className="my-2 border-t border-slate-300 pt-2 md:my-4 md:pt-4">
+          <div className="my-2 border-t border-ekd-border/60 pt-2 md:my-4 md:pt-4">
             <NavLink
               to="/settings"
-              className="block rounded p-2 hover:bg-slate-200"
+              className={getNavLinkClassName}
             >
               Einstellungen
             </NavLink>

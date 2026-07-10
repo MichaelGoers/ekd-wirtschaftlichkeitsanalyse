@@ -14,14 +14,14 @@ export default function CalculationSummary() {
 
   return (
     <div className="space-y-10">
-      <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-sky-700 to-sky-500 p-8 text-white shadow-xl shadow-sky-900/10 md:p-10">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-sky-100">
+      <section className="overflow-hidden rounded-3xl bg-ekd-primary p-8 text-ekd-surface shadow-xl shadow-ekd-primary/10 md:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-ekd-primary-light">
           Ihr wirtschaftlicher Vorteil
         </p>
         <p className="mt-4 text-5xl font-bold tracking-tight md:text-6xl">
           {formatCurrency(result.savingsTwentyYears)}
         </p>
-        <p className="mt-3 text-lg text-sky-100">
+        <p className="mt-3 text-lg text-ekd-primary-light">
           Über den Betrachtungszeitraum von{" "}
           {result.analysisPeriodYears} Jahren mit Wärmepumpe,
           PV-Anlage und EKDFlow
@@ -30,8 +30,8 @@ export default function CalculationSummary() {
 
       <section>
         <div className="mb-5">
-          <h2 className="text-2xl font-bold text-slate-900">Übersicht</h2>
-          <p className="mt-1 text-slate-600">
+          <h2 className="text-2xl font-bold text-ekd-text">Übersicht</h2>
+          <p className="mt-1 text-ekd-text-secondary">
             Investition und heutige Energiekosten auf einen Blick
           </p>
         </div>
@@ -51,10 +51,10 @@ export default function CalculationSummary() {
 
       <section>
         <div className="mb-5">
-          <h2 className="text-2xl font-bold text-slate-900">
+          <h2 className="text-2xl font-bold text-ekd-text">
             Berechnung im Detail
           </h2>
-          <p className="mt-1 text-slate-600">
+          <p className="mt-1 text-ekd-text-secondary">
             Die jährlichen Energiekosten der drei betrachteten Lösungen
           </p>
         </div>

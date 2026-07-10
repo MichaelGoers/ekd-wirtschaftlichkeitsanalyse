@@ -13,7 +13,7 @@ export default function TextField({
 }: TextFieldProps) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
+      <label className="mb-2 block text-sm font-medium text-ekd-text-secondary">
         {label}
       </label>
 
@@ -22,7 +22,7 @@ export default function TextField({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-slate-300 px-4 py-2 shadow-sm transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+        className="w-full rounded-lg border border-ekd-border px-4 py-2 shadow-sm transition focus:border-ekd-primary focus:outline-none focus:ring-2 focus:ring-ekd-primary"
       />
     </div>
   );

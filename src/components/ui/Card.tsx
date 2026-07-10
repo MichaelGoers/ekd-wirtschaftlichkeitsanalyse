@@ -7,8 +7,8 @@ interface CardProps {
 
 export default function Card({ title, children }: CardProps) {
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-      <h2 className="mb-6 text-xl font-semibold text-slate-800">
+    <section className="rounded-2xl bg-ekd-surface p-6 shadow-sm shadow-ekd-text/5 ring-1 ring-ekd-border">
+      <h2 className="mb-6 text-xl font-semibold text-ekd-text">
         {title}
       </h2>
 

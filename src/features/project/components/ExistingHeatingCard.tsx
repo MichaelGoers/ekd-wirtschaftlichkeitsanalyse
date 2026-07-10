@@ -44,14 +44,14 @@ function HeatingTypeOption({
   onChange,
 }: HeatingTypeOptionProps) {
   return (
-    <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+    <label className="flex items-center gap-2 text-sm font-medium text-ekd-text-secondary">
       <input
         type="radio"
         name="existing-heating-type"
         value={value}
         checked={selectedValue === value}
         onChange={() => onChange(value)}
-        className="h-4 w-4 border-slate-300 text-sky-600 focus:ring-sky-500"
+        className="h-4 w-4 border-ekd-border text-ekd-primary focus:ring-ekd-primary"
       />
       {label}
     </label>
@@ -215,16 +215,16 @@ export default function ExistingHeatingCard() {
         </>
       )}
 
-      <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-        <h3 className="text-sm font-semibold text-slate-700">
+      <div className="rounded-xl border border-ekd-border bg-ekd-background p-4 shadow-sm shadow-ekd-text/5">
+        <h3 className="text-sm font-semibold text-ekd-text-secondary">
           Automatisch berechnet
         </h3>
 
-        <dl className="mt-3 space-y-2 text-sm text-slate-600">
+        <dl className="mt-3 space-y-2 text-sm text-ekd-text-secondary">
           {isOilHeating && (
             <div className="flex items-center justify-between gap-6">
               <dt>Heizenergie</dt>
-              <dd className="font-medium tabular-nums text-slate-800">
+              <dd className="font-medium tabular-nums text-ekd-text">
                 {formatOptionalEnergy(result.heatEnergy)}
               </dd>
             </div>
@@ -232,14 +232,14 @@ export default function ExistingHeatingCard() {
 
           <div className="flex items-center justify-between gap-6">
             <dt>Jährliche Heizkosten</dt>
-            <dd className="font-medium tabular-nums text-slate-800">
+            <dd className="font-medium tabular-nums text-ekd-text">
               {formatOptionalCurrency(result.annualHeatingCost)}
             </dd>
           </div>
 
           <div className="flex items-center justify-between gap-6">
             <dt>Benötigter Wärmepumpenstrom</dt>
-            <dd className="font-medium tabular-nums text-slate-800">
+            <dd className="font-medium tabular-nums text-ekd-text">
               {formatOptionalEnergy(result.requiredHeatPumpElectricity)}
             </dd>
           </div>

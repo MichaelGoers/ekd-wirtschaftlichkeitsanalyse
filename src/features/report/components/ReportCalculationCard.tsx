@@ -30,22 +30,22 @@ function ReportProtocolRow({
       <span
         className={
           strong
-            ? "whitespace-nowrap font-semibold text-slate-950"
-            : "text-slate-600"
+            ? "whitespace-nowrap font-semibold text-ekd-text"
+            : "text-ekd-text-secondary"
         }
       >
         {label}
       </span>
       <span
         className={`min-w-0 text-left sm:whitespace-nowrap ${
-          strong ? "font-semibold text-slate-950" : "font-medium text-slate-800"
+          strong ? "font-semibold text-ekd-text" : "font-medium text-ekd-text"
         }`}
       >
         {formula}
       </span>
       <span
         className={`text-right tabular-nums ${
-          strong ? "font-semibold text-slate-950" : "font-semibold text-slate-900"
+          strong ? "font-semibold text-ekd-text" : "font-semibold text-ekd-text"
         }`}
       >
         {amount}
@@ -61,8 +61,8 @@ export default function ReportCalculationCard({
   savings,
 }: ReportCalculationCardProps) {
   return (
-    <article className="border-t-2 border-orange-200 pt-2">
-      <h3 className="text-base font-semibold text-slate-950">{title}</h3>
+    <article className="border-t-2 border-ekd-primary-light pt-2">
+      <h3 className="text-base font-semibold text-ekd-text">{title}</h3>
 
       <div className="mt-1 space-y-0">
         {formulas.map((formula) => (
@@ -77,14 +77,14 @@ export default function ReportCalculationCard({
         ))}
       </div>
 
-      <div className="mt-1.5 border-t border-slate-300 pt-1.5">
+      <div className="mt-1.5 border-t border-ekd-border pt-1.5">
         <ReportProtocolRow
           label="Jährliche Energiekosten"
           amount={total}
           strong
         />
 
-        <div className="mt-1 flex items-center justify-center gap-8 border-y border-green-200 py-1 text-green-800">
+        <div className="mt-1 flex items-center justify-center gap-8 border-y border-ekd-success/30 py-1 text-ekd-success">
           <span className="text-sm font-semibold">
             Jährliche Ersparnis gegenüber heute
           </span>

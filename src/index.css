@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+:root {
+  --ekd-primary: #f97316;
+  --ekd-primary-light: #ffedd5;
+  --ekd-primary-dark: #c2410c;
+  --ekd-text: #0f172a;
+  --ekd-text-secondary: #475569;
+  --ekd-success: #15803d;
+  --ekd-danger: #dc2626;
+  --ekd-background: #f8fafc;
+  --ekd-surface: #ffffff;
+  --ekd-border: #e2e8f0;
+}
+
+@theme {
+  --color-ekd-primary: var(--ekd-primary);
+  --color-ekd-primary-light: var(--ekd-primary-light);
+  --color-ekd-primary-dark: var(--ekd-primary-dark);
+  --color-ekd-text: var(--ekd-text);
+  --color-ekd-text-secondary: var(--ekd-text-secondary);
+  --color-ekd-success: var(--ekd-success);
+  --color-ekd-danger: var(--ekd-danger);
+  --color-ekd-background: var(--ekd-background);
+  --color-ekd-surface: var(--ekd-surface);
+  --color-ekd-border: var(--ekd-border);
+}
+
 .report-page-shell {
   align-items: center;
   display: flex;

@@ -11,18 +11,18 @@ export default function KpiCard({
 }: KpiCardProps) {
   const color =
     accent === "green"
-      ? "border-green-500"
-      : "border-sky-600";
+      ? "border-ekd-success"
+      : "border-ekd-primary";
 
   return (
     <div
-      className={`rounded-2xl border-l-4 ${color} bg-white p-6 shadow-sm`}
+      className={`rounded-2xl border-l-4 ${color} bg-ekd-surface p-6 shadow-sm shadow-ekd-text/5 ring-1 ring-ekd-border`}
     >
-      <p className="text-sm font-medium uppercase tracking-wide text-slate-500">
+      <p className="text-sm font-medium uppercase tracking-wide text-ekd-text-secondary">
         {title}
       </p>
 
-      <p className="mt-3 text-4xl font-bold text-slate-900">
+      <p className="mt-3 text-4xl font-bold text-ekd-text">
         {value}
       </p>
     </div>

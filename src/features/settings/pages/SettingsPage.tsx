@@ -7,7 +7,7 @@ import type { Settings } from "../../../types/settings";
 
 function FieldDescription({ children }: { children: string }) {
   return (
-    <p className="mt-2 text-sm leading-5 text-slate-500">
+    <p className="mt-2 text-sm leading-5 text-ekd-text-secondary">
       {children}
     </p>
   );
@@ -30,11 +30,11 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <header>
-        <h1 className="text-4xl font-bold text-sky-700">
+        <h1 className="text-4xl font-bold text-ekd-primary">
           Einstellungen
         </h1>
 
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-ekd-text-secondary">
           Parameter für die Wirtschaftlichkeitsanalyse
         </p>
       </header>

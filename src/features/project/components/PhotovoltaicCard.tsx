@@ -95,7 +95,7 @@ function RecommendationLine({ label, value }: RecommendationLineProps) {
   return (
     <div className="flex items-center justify-between gap-6">
       <dt>{label}</dt>
-      <dd className="font-medium tabular-nums text-slate-800">
+      <dd className="font-medium tabular-nums text-ekd-text">
         {value}
       </dd>
     </div>
@@ -104,7 +104,7 @@ function RecommendationLine({ label, value }: RecommendationLineProps) {
 
 function RecommendationSection({ children }: { children: string }) {
   return (
-    <dt className="pt-2 text-sm font-semibold text-slate-700 first:pt-0">
+    <dt className="pt-2 text-sm font-semibold text-ekd-text-secondary first:pt-0">
       {children}
     </dt>
   );
@@ -175,12 +175,12 @@ export default function PhotovoltaicCard() {
 
   return (
     <Card title="Photovoltaik">
-      <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-        <h3 className="text-sm font-semibold text-slate-700">
+      <div className="rounded-xl border border-ekd-border bg-ekd-background p-4 shadow-sm shadow-ekd-text/5">
+        <h3 className="text-sm font-semibold text-ekd-text-secondary">
           Automatisch berechnet
         </h3>
 
-        <dl className="mt-3 space-y-2 text-sm text-slate-600">
+        <dl className="mt-3 space-y-2 text-sm text-ekd-text-secondary">
           <RecommendationLine
             label="Gesamtstrombedarf"
             value={formatEnergy(result.totalElectricityDemand)}
@@ -203,12 +203,12 @@ export default function PhotovoltaicCard() {
           <div className="flex items-center justify-between gap-6 pt-1">
             <label
               htmlFor="desired-photovoltaic-power"
-              className="text-slate-600"
+              className="text-ekd-text-secondary"
             >
               Gewünschte Leistung
             </label>
 
-            <div className="flex items-center gap-2 font-medium tabular-nums text-slate-800">
+            <div className="flex items-center gap-2 font-medium tabular-nums text-ekd-text">
               <input
                 id="desired-photovoltaic-power"
                 type="text"
@@ -228,7 +228,7 @@ export default function PhotovoltaicCard() {
                   );
                   setIsDesiredPowerFocused(true);
                 }}
-                className="w-20 rounded-md border border-slate-300 bg-white px-2 py-0.5 text-right shadow-sm transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-20 rounded-md border border-ekd-border bg-ekd-surface px-2 py-0.5 text-right shadow-sm transition focus:border-ekd-primary focus:outline-none focus:ring-2 focus:ring-ekd-primary"
               />
               <span>kWp</span>
             </div>
