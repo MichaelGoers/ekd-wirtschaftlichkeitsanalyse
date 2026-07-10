@@ -51,7 +51,7 @@ export default function CalculationCard({
   highlighted = false,
 }: CalculationCardProps) {
   return (
-    <Card title={title}>
+    <Card title={title} withLeftAccent>
       <div className="space-y-3">
         {formulas.map((formula) => (
           <ProtocolRow

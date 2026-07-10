@@ -40,7 +40,7 @@ export default function SettingsPage() {
       </header>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Card title="Wirtschaftlichkeit">
+        <Card title="Wirtschaftlichkeit" withLeftAccent>
           <NumberField
             label="Betrachtungszeitraum"
             value={settings.analysisPeriodYears}
@@ -66,7 +66,7 @@ export default function SettingsPage() {
           />
         </Card>
 
-        <Card title="Energie">
+        <Card title="Energie" withLeftAccent>
           <NumberField
             label="Einspeisevergütung"
             value={settings.feedInTariff}
@@ -97,7 +97,7 @@ export default function SettingsPage() {
           />
         </Card>
 
-        <Card title="Wärmepumpe">
+        <Card title="Wärmepumpe" withLeftAccent>
           <NumberField
             label="Standard-COP"
             value={settings.standardHeatPumpCop}
@@ -109,7 +109,7 @@ export default function SettingsPage() {
           </FieldDescription>
         </Card>
 
-        <Card title="Heizöl">
+        <Card title="Heizöl" withLeftAccent>
           <NumberField
             label="Heizwert Heizöl"
             value={settings.heatingOilCalorificValue}
@@ -124,7 +124,7 @@ export default function SettingsPage() {
           </FieldDescription>
         </Card>
 
-        <Card title="Elektroauto">
+        <Card title="Elektroauto" withLeftAccent>
           <NumberField
             label="Durchschnittlicher Stromverbrauch"
             value={settings.electricVehicleConsumption}
@@ -139,7 +139,7 @@ export default function SettingsPage() {
           </FieldDescription>
         </Card>
 
-        <Card title="Photovoltaik">
+        <Card title="Photovoltaik" withLeftAccent>
           <NumberField
             label="Modulleistung"
             value={settings.photovoltaicModulePower}

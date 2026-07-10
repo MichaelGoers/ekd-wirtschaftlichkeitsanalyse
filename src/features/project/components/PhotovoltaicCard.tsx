@@ -174,7 +174,7 @@ export default function PhotovoltaicCard() {
   };
 
   return (
-    <Card title="Photovoltaik">
+    <Card title="Photovoltaik" withLeftAccent>
       <div className="rounded-xl border border-ekd-border bg-ekd-background p-4 shadow-sm shadow-ekd-text/5">
         <h3 className="text-sm font-semibold text-ekd-text-secondary">
           Automatisch berechnet

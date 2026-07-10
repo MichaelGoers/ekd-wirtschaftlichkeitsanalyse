@@ -89,7 +89,7 @@ export default function ExistingHeatingCard() {
   const isOilHeating = existingHeating.type === "oil";
 
   return (
-    <Card title="Bestand Heizung">
+    <Card title="Bestand Heizung" withLeftAccent>
       <div className="flex gap-6">
         <HeatingTypeOption
           label="Gas"

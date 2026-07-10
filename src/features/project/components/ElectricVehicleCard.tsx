@@ -65,7 +65,7 @@ export default function ElectricVehicleCard() {
   };
 
   return (
-    <Card title="Elektroauto">
+    <Card title="Elektroauto" withLeftAccent>
       <div className="flex flex-wrap gap-6">
         <ElectricVehicleOption
           label="Kein Elektroauto"

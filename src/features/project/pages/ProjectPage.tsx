@@ -20,7 +20,7 @@ export default function ProjectPage() {
         </p>
       </header>
 
-      <Card title="Kunde">
+      <Card title="Kunde" withLeftAccent>
         <CustomerNameInput />
       </Card>
 

@@ -7,7 +7,7 @@ export default function InvestmentCard() {
   const updateProject = useProjectStore((state) => state.updateProject);
 
   return (
-    <Card title="Investition">
+    <Card title="Investition" withLeftAccent>
       <NumberField
         label="Wärmepumpenlösung"
         value={project.investment.heatPump}

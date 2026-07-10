@@ -43,7 +43,7 @@ export default function HouseholdElectricityCard() {
   };
 
   return (
-    <Card title="Haushaltsstrom">
+    <Card title="Haushaltsstrom" withLeftAccent>
       <NumberField
         label="Jährlicher Stromverbrauch"
         value={householdElectricity.annualConsumption}
