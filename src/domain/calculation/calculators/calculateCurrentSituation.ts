@@ -1,20 +1,26 @@
-import type { Project } from "../../../types/project";
+import type { Settings } from "../../../types/settings";
+import type { AnalysisEnergyValues } from "../services/calculateAnalysisEnergyValues";
 
 export interface CurrentSituationResult {
+  annualElectricityCost: number;
+  annualHeatingCost: number;
   annualCost: number;
   twentyYearCost: number;
 }
 
 export function calculateCurrentSituation(
-  project: Project,
+  energyValues: AnalysisEnergyValues,
+  settings: Settings,
 ): CurrentSituationResult {
   const annualCost =
-    project.consumption.annualElectricityCost +
-    project.consumption.annualGasCost;
+    energyValues.annualElectricityCost +
+    energyValues.annualHeatingCost;
 
   return {
+    annualElectricityCost: energyValues.annualElectricityCost,
+    annualHeatingCost: energyValues.annualHeatingCost,
     annualCost,
     twentyYearCost:
-      annualCost * project.settings.analysisPeriodYears,
+      annualCost * settings.analysisPeriodYears,
   };
 }

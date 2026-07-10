@@ -12,16 +12,6 @@ export const defaultProject: Project = {
     kfwFunding: 0,
   },
 
-  consumption: {
-    annualElectricityCost: 0,
-    annualGasCost: 0,
-
-    householdConsumption: 0,
-    heatPumpConsumption: 0,
-
-    photovoltaicYield: 0,
-  },
-
   householdElectricity: {
     annualConsumption: 0,
     monthlyPayment: 0,
@@ -41,6 +31,10 @@ export const defaultProject: Project = {
   electricVehicle: {
     enabled: false,
     annualMileage: 0,
+  },
+
+  photovoltaic: {
+    desiredPower: null,
   },
 
   settings: defaultSettings,

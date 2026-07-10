@@ -1,4 +1,6 @@
 export interface CurrentSituationResult {
+  annualElectricityCost: number;
+  annualHeatingCost: number;
   annualCost: number;
   twentyYearCost: number;
 }

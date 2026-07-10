@@ -8,6 +8,7 @@ import type {
   ExistingHeating,
   HeatingSystemType,
 } from "../../../types/project";
+import { createExclusiveNumberUpdate } from "../../../utils/createExclusiveNumberUpdate";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import { formatEnergy } from "../../../utils/formatEnergy";
 
@@ -121,9 +122,19 @@ export default function ExistingHeatingCard() {
             value={existingHeating.oilPricePerLiter}
             suffix="€/Liter"
             withoutStepper
-            onChange={(value) =>
-              updateExistingHeating("oilPricePerLiter", value)
-            }
+            onChange={(value) => {
+              updateProject((project) => ({
+                ...project,
+                existingHeating: {
+                  ...(project.existingHeating ?? defaultExistingHeating),
+                  ...createExclusiveNumberUpdate(
+                    "oilPricePerLiter",
+                    "oilAnnualBill",
+                    value,
+                  ),
+                },
+              }));
+            }}
           />
 
           <AlternativeInputDivider />
@@ -133,7 +144,19 @@ export default function ExistingHeatingCard() {
             value={existingHeating.oilAnnualBill}
             suffix="€/Jahr"
             withoutStepper
-            onChange={(value) => updateExistingHeating("oilAnnualBill", value)}
+            onChange={(value) => {
+              updateProject((project) => ({
+                ...project,
+                existingHeating: {
+                  ...(project.existingHeating ?? defaultExistingHeating),
+                  ...createExclusiveNumberUpdate(
+                    "oilAnnualBill",
+                    "oilPricePerLiter",
+                    value,
+                  ),
+                },
+              }));
+            }}
           />
         </>
       ) : (
@@ -153,9 +176,19 @@ export default function ExistingHeatingCard() {
             value={existingHeating.gasMonthlyPayment}
             suffix="€/Monat"
             withoutStepper
-            onChange={(value) =>
-              updateExistingHeating("gasMonthlyPayment", value)
-            }
+            onChange={(value) => {
+              updateProject((project) => ({
+                ...project,
+                existingHeating: {
+                  ...(project.existingHeating ?? defaultExistingHeating),
+                  ...createExclusiveNumberUpdate(
+                    "gasMonthlyPayment",
+                    "gasAnnualBill",
+                    value,
+                  ),
+                },
+              }));
+            }}
           />
 
           <AlternativeInputDivider />
@@ -165,7 +198,19 @@ export default function ExistingHeatingCard() {
             value={existingHeating.gasAnnualBill}
             suffix="€/Jahr"
             withoutStepper
-            onChange={(value) => updateExistingHeating("gasAnnualBill", value)}
+            onChange={(value) => {
+              updateProject((project) => ({
+                ...project,
+                existingHeating: {
+                  ...(project.existingHeating ?? defaultExistingHeating),
+                  ...createExclusiveNumberUpdate(
+                    "gasAnnualBill",
+                    "gasMonthlyPayment",
+                    value,
+                  ),
+                },
+              }));
+            }}
           />
         </>
       )}

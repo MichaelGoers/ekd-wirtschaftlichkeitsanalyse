@@ -1,4 +1,5 @@
-import type { Project } from "../../../types/project";
+import type { Settings } from "../../../types/settings";
+import type { AnalysisEnergyValues } from "../services/calculateAnalysisEnergyValues";
 
 export interface HeatPumpPvResult {
   feedInEnergy: number;
@@ -14,28 +15,25 @@ export interface HeatPumpPvResult {
 }
 
 export function calculateHeatPumpPv(
-  project: Project,
+  energyValues: AnalysisEnergyValues,
+  settings: Settings,
   currentAnnualCost: number,
 ): HeatPumpPvResult {
-  const totalConsumption =
-    project.consumption.householdConsumption +
-    project.consumption.heatPumpConsumption;
-
   const feedInEnergy =
-    project.consumption.photovoltaicYield *
-    project.settings.feedInShare;
+    energyValues.photovoltaicAnnualYield *
+    settings.feedInShare;
 
   const feedInRevenue =
     feedInEnergy *
-    project.settings.feedInTariff;
+    settings.feedInTariff;
 
   const gridConsumption =
-    totalConsumption *
-    project.settings.gridConsumptionShare;
+    energyValues.totalConsumption *
+    settings.gridConsumptionShare;
 
   const gridPurchaseCost =
     gridConsumption *
-    project.settings.electricityPrice;
+    settings.electricityPrice;
 
   const annualEnergyCost =
     gridPurchaseCost - feedInRevenue;
@@ -45,10 +43,10 @@ export function calculateHeatPumpPv(
 
   return {
     feedInEnergy,
-    feedInTariff: project.settings.feedInTariff,
+    feedInTariff: settings.feedInTariff,
     feedInRevenue,
     gridConsumption,
-    gridTariff: project.settings.electricityPrice,
+    gridTariff: settings.electricityPrice,
     gridPurchaseCost,
     annualEnergyCost,
     annualSavings,

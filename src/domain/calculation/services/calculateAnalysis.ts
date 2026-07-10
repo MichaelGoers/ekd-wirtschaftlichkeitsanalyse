@@ -6,15 +6,23 @@ import { calculateInvestment } from "../calculators/calculateInvestment";
 import { calculateHeatPump } from "../calculators/calculateHeatPump";
 import { calculateHeatPumpPv } from "../calculators/calculateHeatPumpPv";
 import { calculateHeatPumpPvEkdFlow } from "../calculators/calculateHeatPumpPvEkdFlow";
+import { calculateAnalysisEnergyValues } from "./calculateAnalysisEnergyValues";
 
 export function calculateAnalysis(
   project: Project,
 ): CalculationResult {
-  const currentSituation = calculateCurrentSituation(project);
+  const energyValues = calculateAnalysisEnergyValues(project);
+  const currentSituation = calculateCurrentSituation(
+    energyValues,
+    project.settings,
+  );
 
   const investment = calculateInvestment(project);
 
-  const heatPumpBase = calculateHeatPump(project);
+  const heatPumpBase = calculateHeatPump(
+    energyValues,
+    project.settings,
+  );
 
   const heatPump = {
     ...heatPumpBase,
@@ -24,12 +32,14 @@ export function calculateAnalysis(
   };
 
   const heatPumpPv = calculateHeatPumpPv(
-    project,
+    energyValues,
+    project.settings,
     currentSituation.annualCost,
   );
 
   const heatPumpPvEkdFlow = calculateHeatPumpPvEkdFlow(
-    project,
+    energyValues,
+    project.settings,
     currentSituation.annualCost,
   );
 

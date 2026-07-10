@@ -1,4 +1,5 @@
-import type { Project } from "../../../types/project";
+import type { Settings } from "../../../types/settings";
+import type { AnalysisEnergyValues } from "../services/calculateAnalysisEnergyValues";
 
 export interface HeatPumpPvEkdFlowResult {
   feedInEnergy: number;
@@ -16,33 +17,30 @@ export interface HeatPumpPvEkdFlowResult {
 }
 
 export function calculateHeatPumpPvEkdFlow(
-  project: Project,
+  energyValues: AnalysisEnergyValues,
+  settings: Settings,
   currentAnnualCost: number,
 ): HeatPumpPvEkdFlowResult {
-  const totalConsumption =
-    project.consumption.householdConsumption +
-    project.consumption.heatPumpConsumption;
-
   const feedInEnergy =
-    project.consumption.photovoltaicYield *
-    project.settings.feedInShare;
+    energyValues.photovoltaicAnnualYield *
+    settings.feedInShare;
 
   const feedInRevenue =
     feedInEnergy *
-    project.settings.feedInTariff;
+    settings.feedInTariff;
 
   const gridConsumption =
-    totalConsumption *
-    project.settings.gridConsumptionShare;
+    energyValues.totalConsumption *
+    settings.gridConsumptionShare;
 
   const gridPurchaseCost =
     gridConsumption *
-    project.settings.ekdFlowElectricityPrice;
+    settings.ekdFlowElectricityPrice;
 
   const annualEnergyCost =
     gridPurchaseCost
     - feedInRevenue
-    - project.settings.reducedGridFees;
+    - settings.reducedGridFees;
 
   const annualSavings =
     currentAnnualCost
@@ -50,12 +48,12 @@ export function calculateHeatPumpPvEkdFlow(
 
   return {
     feedInEnergy,
-    feedInTariff: project.settings.feedInTariff,
+    feedInTariff: settings.feedInTariff,
     feedInRevenue,
     gridConsumption,
-    gridTariff: project.settings.ekdFlowElectricityPrice,
+    gridTariff: settings.ekdFlowElectricityPrice,
     gridPurchaseCost,
-    reducedGridFees: project.settings.reducedGridFees,
+    reducedGridFees: settings.reducedGridFees,
     annualEnergyCost,
     annualSavings,
   };

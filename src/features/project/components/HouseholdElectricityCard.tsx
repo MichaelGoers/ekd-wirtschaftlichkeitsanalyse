@@ -4,6 +4,7 @@ import NumberField from "../../../components/ui/NumberField";
 import { calculateHouseholdElectricity } from "../../../domain/calculation/services/calculateHouseholdElectricity";
 import { useProjectStore } from "../../../store/projectStore";
 import type { HouseholdElectricity } from "../../../types/project";
+import { createExclusiveNumberUpdate } from "../../../utils/createExclusiveNumberUpdate";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import { formatEnergyTariff } from "../../../utils/formatEnergyTariff";
 
@@ -58,9 +59,20 @@ export default function HouseholdElectricityCard() {
         value={householdElectricity.monthlyPayment}
         suffix="€/Monat"
         withoutStepper
-        onChange={(value) =>
-          updateHouseholdElectricity("monthlyPayment", value)
-        }
+        onChange={(value) => {
+          updateProject((project) => ({
+            ...project,
+            householdElectricity: {
+              ...(project.householdElectricity
+                ?? defaultHouseholdElectricity),
+              ...createExclusiveNumberUpdate(
+                "monthlyPayment",
+                "annualBill",
+                value,
+              ),
+            },
+          }));
+        }}
       />
 
       <AlternativeInputDivider />
@@ -70,7 +82,20 @@ export default function HouseholdElectricityCard() {
         value={householdElectricity.annualBill}
         suffix="€/Jahr"
         withoutStepper
-        onChange={(value) => updateHouseholdElectricity("annualBill", value)}
+        onChange={(value) => {
+          updateProject((project) => ({
+            ...project,
+            householdElectricity: {
+              ...(project.householdElectricity
+                ?? defaultHouseholdElectricity),
+              ...createExclusiveNumberUpdate(
+                "annualBill",
+                "monthlyPayment",
+                value,
+              ),
+            },
+          }));
+        }}
       />
 
       <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">

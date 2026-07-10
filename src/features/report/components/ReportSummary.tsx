@@ -82,12 +82,14 @@ export default function ReportSummary({
         <div className="mt-2 space-y-0 text-sm">
           <SummaryLine
             label="Gas / Öl"
-            value={formatCurrency(project.consumption.annualGasCost)}
+            value={formatCurrency(
+              result.currentSituation.annualHeatingCost,
+            )}
           />
           <SummaryLine
             label="Strom"
             value={formatCurrency(
-              project.consumption.annualElectricityCost,
+              result.currentSituation.annualElectricityCost,
             )}
           />
         </div>

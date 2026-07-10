@@ -7,16 +7,6 @@ export interface Investment {
   kfwFunding: number;
 }
 
-export interface Consumption {
-  annualElectricityCost: number;
-  annualGasCost: number;
-
-  householdConsumption: number;
-  heatPumpConsumption: number;
-
-  photovoltaicYield: number;
-}
-
 export interface HouseholdElectricity {
   annualConsumption: number;
   monthlyPayment: number;
@@ -40,12 +30,16 @@ export interface ElectricVehicle {
   annualMileage: number;
 }
 
+export interface Photovoltaic {
+  desiredPower: number | null;
+}
+
 export interface Project {
   customer: Customer;
   investment: Investment;
-  consumption: Consumption;
   householdElectricity: HouseholdElectricity;
   existingHeating: ExistingHeating;
   electricVehicle: ElectricVehicle;
+  photovoltaic: Photovoltaic;
   settings: Settings;
 }

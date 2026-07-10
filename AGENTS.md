@@ -59,3 +59,69 @@ Regeln:
 - sekundäre Textfarbe
 - 1 px horizontale Linie
 - kein zusätzlicher Hilfetext
+
+# Zahlenformatierung (Projektstandard)
+
+Für die gesamte Anwendung gelten folgende Formatierungsregeln.
+Diese Regeln sind verbindlich und gelten für Projektseite, Auswertung, PDF sowie alle zukünftigen Erweiterungen.
+
+| Datentyp | Format | Beispiel |
+|----------|--------|----------|
+| Euro | immer 2 Nachkommastellen | 1.440,00 € |
+| €/kWh | immer 3 Nachkommastellen | 0,288 €/kWh |
+| kWh | immer 2 Nachkommastellen | 18,58 kWh |
+| kWp | immer 2 Nachkommastellen | 11,30 kWp |
+| Prozent | keine Nachkommastellen | 60 % |
+| Stück | keine Nachkommastellen | 24 Stk. |
+
+## Darstellung
+
+- Deutsche Zahlenformatierung verwenden.
+- Tausendertrennzeichen mit Punkt.
+- Dezimaltrennzeichen mit Komma.
+- Einheit immer mit Leerzeichen hinter dem Zahlenwert darstellen.
+- Einheiten grundsätzlich nicht übersetzen.
+
+## Implementierung
+
+Formatierungen sollen nach Möglichkeit zentral erfolgen (Formatter/Utilities) und nicht mehrfach im Code mit `toFixed()` implementiert werden.
+
+Neue Ansichten, Berechnungen und PDF-Ausgaben müssen diese Formatierungsregeln automatisch verwenden.
+
+# UI-Standards
+
+## Alternativ-Eingaben ("oder")
+
+Bei Eingabepaaren mit einem "oder"-Trenner gilt:
+
+- Änderung im ersten Feld setzt das zweite Feld automatisch auf 0.
+- Änderung im zweiten Feld setzt das erste Feld automatisch auf 0.
+- Keine Warnmeldungen oder Dialoge anzeigen.
+- Diese Logik ist projektweit wiederzuverwenden.
+
+## Automatisch berechnete Werte
+
+Berechnete Werte werden in einem hellgrauen Informationsbereich dargestellt.
+
+Der Benutzer erkennt dadurch sofort:
+
+- berechnete Werte
+- manuell editierbare Werte
+
+## Überschriften
+
+Abschnittsüberschriften werden in normaler Schreibweise verwendet.
+
+Beispiele:
+
+PV-Auslegung
+
+Speicherauslegung
+
+Nicht in Versalien schreiben.
+
+## Empfehlungen
+
+Automatisch berechnete Empfehlungen dürfen durch Benutzereingaben nicht verändert werden.
+
+Benutzereingaben (z. B. "Gewünschte Leistung") beeinflussen ausschließlich die nachgelagerte Wirtschaftlichkeitsberechnung.

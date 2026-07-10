@@ -1,4 +1,5 @@
-import type { Project } from "../../../types/project";
+import type { Settings } from "../../../types/settings";
+import type { AnalysisEnergyValues } from "../services/calculateAnalysisEnergyValues";
 
 export interface HeatPumpResult {
   totalConsumption: number;
@@ -7,19 +8,16 @@ export interface HeatPumpResult {
 }
 
 export function calculateHeatPump(
-  project: Project,
+  energyValues: AnalysisEnergyValues,
+  settings: Settings,
 ): HeatPumpResult {
-  const totalConsumption =
-    project.consumption.householdConsumption +
-    project.consumption.heatPumpConsumption;
-
   const annualElectricityCost =
-    totalConsumption *
-    project.settings.electricityPrice;
+    energyValues.totalConsumption *
+    settings.electricityPrice;
 
   return {
-    totalConsumption,
-    electricityTariff: project.settings.electricityPrice,
+    totalConsumption: energyValues.totalConsumption,
+    electricityTariff: settings.electricityPrice,
     annualElectricityCost,
   };
 }

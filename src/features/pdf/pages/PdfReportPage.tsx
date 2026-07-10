@@ -31,7 +31,7 @@ export default function PdfReportPage() {
         <p className="mt-3 text-slate-600">
           Erzeugen Sie den Wirtschaftlichkeitsbericht als eigenständige
           PDF-Datei im DIN-A4-Querformat. Die PDF verwendet dieselben
-          Projektdaten und dieselbe Berechnung wie Dashboard und
+          Projektdaten und dieselbe Berechnung wie Auswertung und
           Browser-Report.
         </p>
       </div>

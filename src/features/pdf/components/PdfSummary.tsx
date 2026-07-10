@@ -73,12 +73,14 @@ export default function PdfSummary({ project, result }: PdfSummaryProps) {
         <View style={pdfStyles.summaryRows}>
           <SummaryLine
             label="Gas / Öl"
-            value={formatPdfCurrency(project.consumption.annualGasCost)}
+            value={formatPdfCurrency(
+              result.currentSituation.annualHeatingCost,
+            )}
           />
           <SummaryLine
             label="Strom"
             value={formatPdfCurrency(
-              project.consumption.annualElectricityCost,
+              result.currentSituation.annualElectricityCost,
             )}
           />
         </View>

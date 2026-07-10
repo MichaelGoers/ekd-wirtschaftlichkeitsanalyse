@@ -6,7 +6,7 @@ export default function DashboardPage() {
 
       <header>
         <h1 className="text-4xl font-bold text-sky-700">
-          Dashboard
+          Auswertung
         </h1>
 
         <p className="mt-2 text-slate-600">

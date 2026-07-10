@@ -13,14 +13,6 @@ export default function MainLayout() {
         <nav className="flex flex-wrap gap-2 md:block md:space-y-2">
 
           <NavLink
-            to="/"
-            end
-            className="block rounded p-2 hover:bg-slate-200"
-          >
-            Dashboard
-          </NavLink>
-
-          <NavLink
             to="/project"
             className="block rounded p-2 hover:bg-slate-200"
           >
@@ -28,10 +20,11 @@ export default function MainLayout() {
           </NavLink>
 
           <NavLink
-            to="/settings"
+            to="/"
+            end
             className="block rounded p-2 hover:bg-slate-200"
           >
-            Einstellungen
+            Auswertung
           </NavLink>
 
           <NavLink
@@ -40,6 +33,15 @@ export default function MainLayout() {
           >
             PDF Report
           </NavLink>
+
+          <div className="my-2 border-t border-slate-300 pt-2 md:my-4 md:pt-4">
+            <NavLink
+              to="/settings"
+              className="block rounded p-2 hover:bg-slate-200"
+            >
+              Einstellungen
+            </NavLink>
+          </div>
 
         </nav>
 
