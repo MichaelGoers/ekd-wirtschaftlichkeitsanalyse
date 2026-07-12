@@ -126,4 +126,4 @@ Automatisch berechnete Empfehlungen dürfen durch Benutzereingaben nicht veränd
 
 Benutzereingaben (z. B. "Gewünschte Leistung") beeinflussen ausschließlich die nachgelagerte Wirtschaftlichkeitsberechnung.
 
-Corporate Design ist abgeschlossen. Änderungen am Erscheinungsbild erfolgen künftig nur noch, wenn sie einen konkreten funktionalen oder ergonomischen Nutzen haben.
+Corporate Design ist abgeschlossen. Änderungen am Erscheinungsbild erfolgen künftig nur noch, wenn sie einen konkreten funktionalen oder ergonomischen Nutzen haben.ls

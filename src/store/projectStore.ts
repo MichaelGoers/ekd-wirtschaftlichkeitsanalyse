@@ -1,8 +1,7 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 import type { Project } from "../types/project";
-import { defaultProject } from "../domain/project/defaultProject";
+import { projectService } from "../domain/project/projectService";
 
 interface ProjectStore {
   project: Project;
@@ -15,30 +14,22 @@ interface ProjectStore {
 }
 
 export const useProjectStore = create<ProjectStore>()(
-  persist(
-    (set) => ({
-      project: structuredClone(defaultProject),
+  (set) => ({
+    project: projectService.loadProject(),
 
-      setProject: (project) =>
-        set({
-          project,
-        }),
-
-      resetProject: () =>
-        set({
-          project: structuredClone(defaultProject),
-        }),
-
-      updateProject: (updater) =>
-        set((state) => ({
-          project: updater(state.project),
-        })),
-    }),
-    {
-      name: "ekd-project-store",
-      partialize: (state) => ({
-        project: state.project,
+    setProject: (project) =>
+      set({
+        project: projectService.setProject(project),
       }),
-    },
-  ),
+
+    resetProject: () =>
+      set({
+        project: projectService.createProject(),
+      }),
+
+    updateProject: (updater) =>
+      set((state) => ({
+        project: projectService.updateProject(() => updater(state.project)),
+      })),
+  }),
 );
