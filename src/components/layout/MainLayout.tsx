@@ -19,6 +19,14 @@ export default function MainLayout() {
         <nav className="flex flex-wrap gap-2 md:block md:space-y-2">
 
           <NavLink
+            to="/"
+            end
+            className={getNavLinkClassName}
+          >
+            Projektübersicht
+          </NavLink>
+
+          <NavLink
             to="/project"
             className={getNavLinkClassName}
           >
@@ -26,8 +34,7 @@ export default function MainLayout() {
           </NavLink>
 
           <NavLink
-            to="/"
-            end
+            to="/auswertung"
             className={getNavLinkClassName}
           >
             Auswertung

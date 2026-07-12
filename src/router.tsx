@@ -4,6 +4,8 @@ import MainLayout from "./components/layout/MainLayout";
 
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 
+import ProjectOverviewPage from "./features/project-overview/pages/ProjectOverviewPage";
+
 import ProjectPage from "./features/project/pages/ProjectPage";
 
 import SettingsPage from "./features/settings/pages/SettingsPage";
@@ -24,6 +26,10 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <ProjectOverviewPage />,
+      },
+      {
+        path: "auswertung",
         element: <DashboardPage />,
       },
       {

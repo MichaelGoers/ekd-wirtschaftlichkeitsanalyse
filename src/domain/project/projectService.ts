@@ -14,6 +14,8 @@ import type {
 } from "../../types/project";
 
 const currentProjectStorageKey = "ekd-current-project";
+const projectsStorageKey = "ekd-projects";
+const currentProjectIdStorageKey = "ekd-current-project-id";
 const legacyProjectStoreKey = "ekd-project-store";
 const autosaveDelayMs = 500;
 
@@ -68,6 +70,28 @@ function readCurrentStoredProject(): Partial<Project> | null {
   return storedValue !== null && typeof storedValue === "object"
     ? (storedValue as Partial<Project>)
     : null;
+}
+
+function readStoredProjects(): Partial<Project>[] {
+  if (!isBrowserStorageAvailable()) {
+    return [];
+  }
+
+  const storedValue = parseStoredProject(
+    localStorage.getItem(projectsStorageKey),
+  );
+
+  return Array.isArray(storedValue)
+    ? (storedValue as Partial<Project>[])
+    : [];
+}
+
+function readCurrentProjectId(): string | null {
+  if (!isBrowserStorageAvailable()) {
+    return null;
+  }
+
+  return localStorage.getItem(currentProjectIdStorageKey);
 }
 
 function readLegacyStoredProject(): Partial<Project> | null {
@@ -196,12 +220,44 @@ function completeProject(
   };
 }
 
+function writeProjectCollection(projects: Project[]): void {
+  if (!isBrowserStorageAvailable()) {
+    return;
+  }
+
+  localStorage.setItem(projectsStorageKey, JSON.stringify(projects));
+}
+
+function updateCurrentProjectStorage(project: Project): void {
+  if (!isBrowserStorageAvailable()) {
+    return;
+  }
+
+  localStorage.setItem(currentProjectIdStorageKey, project.metadata.id);
+  localStorage.setItem(currentProjectStorageKey, JSON.stringify(project));
+}
+
 function persistProject(project: Project): void {
   if (!isBrowserStorageAvailable()) {
     return;
   }
 
-  localStorage.setItem(currentProjectStorageKey, JSON.stringify(project));
+  const projects = readStoredProjects()
+    .map((storedProject) =>
+      completeProject(storedProject, {
+        preserveUpdatedAt: true,
+      }),
+    );
+  const existingProjectIndex = projects.findIndex(
+    (storedProject) => storedProject.metadata.id === project.metadata.id,
+  );
+  const nextProjects =
+    existingProjectIndex >= 0
+      ? projects.with(existingProjectIndex, project)
+      : [...projects, project];
+
+  writeProjectCollection(nextProjects);
+  updateCurrentProjectStorage(project);
 }
 
 class ProjectService {
@@ -210,9 +266,17 @@ class ProjectService {
   private autosaveTimeout: ReturnType<typeof setTimeout> | null = null;
 
   loadProject(): Project {
+    const storedProjects = this.listProjects();
+    const currentProjectId = readCurrentProjectId();
+    const currentProjectFromCollection =
+      storedProjects.find(
+        (project) => project.metadata.id === currentProjectId,
+      ) ?? storedProjects.at(0) ?? null;
     const currentStoredProject = readCurrentStoredProject();
     const storedProject =
-      currentStoredProject ?? readLegacyStoredProject();
+      currentProjectFromCollection ??
+      currentStoredProject ??
+      readLegacyStoredProject();
     const project = completeProject(storedProject, {
       preserveUpdatedAt: true,
     });
@@ -222,6 +286,46 @@ class ProjectService {
     if (currentStoredProject === null) {
       this.saveProject(project);
     }
+
+    return project;
+  }
+
+  listProjects(): Project[] {
+    const storedProjects = readStoredProjects().map((storedProject) =>
+      completeProject(storedProject, {
+        preserveUpdatedAt: true,
+      }),
+    );
+
+    if (this.currentProject === null) {
+      return storedProjects;
+    }
+
+    const hasCurrentProject = storedProjects.some(
+      (project) =>
+        project.metadata.id === this.currentProject?.metadata.id,
+    );
+
+    return hasCurrentProject
+      ? storedProjects.map((project) =>
+          project.metadata.id === this.currentProject?.metadata.id
+            ? this.currentProject
+            : project,
+        )
+      : [...storedProjects, this.currentProject];
+  }
+
+  openProject(projectId: string): Project {
+    const project = this.listProjects().find(
+      (storedProject) => storedProject.metadata.id === projectId,
+    );
+
+    if (project === undefined) {
+      return this.getCurrentProject();
+    }
+
+    this.currentProject = project;
+    this.saveProject(project);
 
     return project;
   }
@@ -243,6 +347,56 @@ class ProjectService {
     this.saveProject(project);
 
     return project;
+  }
+
+  duplicateCurrentProject(): Project {
+    const currentProject = this.getCurrentProject();
+    const duplicatedProject = completeProject(
+      {
+        ...structuredClone(currentProject),
+        metadata: {
+          ...currentProject.metadata,
+          id: "",
+          createdAt: "",
+          updatedAt: "",
+        },
+      },
+      {
+        preserveUpdatedAt: false,
+      },
+    );
+
+    this.currentProject = duplicatedProject;
+    this.saveProject(duplicatedProject);
+
+    return duplicatedProject;
+  }
+
+  deleteProject(projectId: string): Project {
+    const currentProject = this.getCurrentProject();
+    const remainingProjects = this.listProjects().filter(
+      (project) => project.metadata.id !== projectId,
+    );
+    const isDeletingCurrentProject =
+      currentProject.metadata.id === projectId;
+    const nextProjects =
+      remainingProjects.length > 0
+        ? remainingProjects
+        : [
+            completeProject(null, {
+              preserveUpdatedAt: false,
+            }),
+          ];
+    const nextProject = isDeletingCurrentProject
+      ? nextProjects[0]
+      : currentProject;
+
+    this.clearAutosave();
+    writeProjectCollection(nextProjects);
+    this.currentProject = nextProject;
+    updateCurrentProjectStorage(nextProject);
+
+    return nextProject;
   }
 
   setProject(project: Project): Project {

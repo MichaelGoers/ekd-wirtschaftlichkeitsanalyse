@@ -8,7 +8,15 @@ interface ProjectStore {
 
   setProject: (project: Project) => void;
 
+  createProject: () => void;
+
   resetProject: () => void;
+
+  openProject: (projectId: string) => void;
+
+  duplicateProject: () => void;
+
+  deleteProject: (projectId: string) => void;
 
   updateProject: (updater: (project: Project) => Project) => void;
 }
@@ -22,9 +30,29 @@ export const useProjectStore = create<ProjectStore>()(
         project: projectService.setProject(project),
       }),
 
+    createProject: () =>
+      set({
+        project: projectService.createProject(),
+      }),
+
     resetProject: () =>
       set({
         project: projectService.createProject(),
+      }),
+
+    openProject: (projectId) =>
+      set({
+        project: projectService.openProject(projectId),
+      }),
+
+    duplicateProject: () =>
+      set({
+        project: projectService.duplicateCurrentProject(),
+      }),
+
+    deleteProject: (projectId) =>
+      set({
+        project: projectService.deleteProject(projectId),
       }),
 
     updateProject: (updater) =>
