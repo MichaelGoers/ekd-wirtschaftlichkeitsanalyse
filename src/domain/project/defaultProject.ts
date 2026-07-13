@@ -42,7 +42,7 @@ export const defaultProject: Project = {
   },
 
   photovoltaic: {
-    desiredPower: null,
+    desiredModules: null,
   },
 
   settings: defaultSettings,

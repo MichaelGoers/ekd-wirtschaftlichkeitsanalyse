@@ -21,6 +21,8 @@ export const defaultSettings: Settings = {
 
   photovoltaicModulePower: 485,
 
+  photovoltaicSafetyFactor: 1.30,
+
   photovoltaicNightConsumptionShare: 0.60,
 
   photovoltaicStorageTolerance: 0.5,

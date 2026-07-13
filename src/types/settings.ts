@@ -19,6 +19,8 @@ export interface Settings {
 
   photovoltaicModulePower: number;
 
+  photovoltaicSafetyFactor: number;
+
   photovoltaicNightConsumptionShare: number;
 
   photovoltaicStorageTolerance: number;

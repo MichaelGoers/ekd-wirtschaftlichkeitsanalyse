@@ -9,6 +9,7 @@ import type {
   ElectricVehicle,
   ExistingHeating,
   HouseholdElectricity,
+  Photovoltaic,
   Project,
   ProjectCalculatedValues,
 } from "../../types/project";
@@ -25,6 +26,10 @@ const defaultExistingHeating: ExistingHeating =
   defaultProject.existingHeating;
 const defaultElectricVehicle: ElectricVehicle =
   defaultProject.electricVehicle;
+
+type LegacyPhotovoltaic = Partial<Photovoltaic> & {
+  desiredPower?: number | null;
+};
 
 function cloneDefaultProject(): Project {
   return structuredClone(defaultProject);
@@ -154,6 +159,7 @@ function calculateProjectValues(project: Project): ProjectCalculatedValues {
       electricVehicleElectricityDemand:
         electricVehicleResult.additionalElectricityDemand,
       modulePower: settings.photovoltaicModulePower,
+      safetyFactor: settings.photovoltaicSafetyFactor,
       nightConsumptionShare: settings.photovoltaicNightConsumptionShare,
       storageTolerance: settings.photovoltaicStorageTolerance,
     }),
@@ -171,6 +177,25 @@ function completeProject(
     ...fallbackProject.metadata,
     ...project?.metadata,
   };
+  const settings = {
+    ...fallbackProject.settings,
+    ...project?.settings,
+  };
+  const legacyPhotovoltaic = project?.photovoltaic as
+    | LegacyPhotovoltaic
+    | undefined;
+  const desiredModules =
+    legacyPhotovoltaic?.desiredModules
+    ?? (
+      legacyPhotovoltaic?.desiredPower !== undefined
+      && legacyPhotovoltaic.desiredPower !== null
+      && settings.photovoltaicModulePower > 0
+        ? Math.round(
+            (legacyPhotovoltaic.desiredPower * 1000)
+            / settings.photovoltaicModulePower,
+          )
+        : fallbackProject.photovoltaic.desiredModules
+    );
   const completedProject: Project = {
     ...fallbackProject,
     ...project,
@@ -205,12 +230,9 @@ function completeProject(
     },
     photovoltaic: {
       ...fallbackProject.photovoltaic,
-      ...project?.photovoltaic,
+      desiredModules,
     },
-    settings: {
-      ...fallbackProject.settings,
-      ...project?.settings,
-    },
+    settings,
     calculatedValues: fallbackProject.calculatedValues,
   };
 

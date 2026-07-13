@@ -36,7 +36,7 @@ export interface ElectricVehicle {
 }
 
 export interface Photovoltaic {
-  desiredPower: number | null;
+  desiredModules: number | null;
 }
 
 export interface ProjectMetadata {

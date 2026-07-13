@@ -12,10 +12,11 @@ function getCustomerName(project: Project): string {
 }
 
 function getDesiredPhotovoltaicPower(project: Project): number {
-  return (
-    project.photovoltaic.desiredPower
-    ?? project.calculatedValues.photovoltaic.actualPhotovoltaicPower
-  );
+  const desiredModules =
+    project.photovoltaic.desiredModules
+    ?? project.calculatedValues.photovoltaic.recommendedModules;
+
+  return (desiredModules * project.settings.photovoltaicModulePower) / 1000;
 }
 
 function getProjectTitle(project: Project): string {

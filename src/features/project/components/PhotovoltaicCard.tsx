@@ -36,7 +36,7 @@ const defaultElectricVehicle: ElectricVehicle = {
 };
 
 const defaultPhotovoltaic: Photovoltaic = {
-  desiredPower: null,
+  desiredModules: null,
 };
 
 function formatPower(value: number): string {
@@ -59,10 +59,9 @@ function formatModules(value: number): string {
   }).format(value)} Stk.`;
 }
 
-function formatInputValue(value: number): string {
+function formatModuleInputValue(value: number): string {
   return new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
     useGrouping: false,
   }).format(value);
 }
@@ -113,14 +112,19 @@ function RecommendationSection({ children }: { children: string }) {
 export default function PhotovoltaicCard() {
   const project = useProjectStore((state) => state.project);
   const updateProject = useProjectStore((state) => state.updateProject);
-  const [desiredPowerInputValue, setDesiredPowerInputValue] = useState("");
-  const [isDesiredPowerFocused, setIsDesiredPowerFocused] = useState(false);
+  const [desiredModulesInputValue, setDesiredModulesInputValue] =
+    useState("");
+  const [isDesiredModulesFocused, setIsDesiredModulesFocused] =
+    useState(false);
   const householdElectricity =
     project.householdElectricity ?? defaultHouseholdElectricity;
   const existingHeating = project.existingHeating ?? defaultExistingHeating;
   const electricVehicle = project.electricVehicle ?? defaultElectricVehicle;
   const photovoltaic = project.photovoltaic ?? defaultPhotovoltaic;
   const settings = project.settings;
+  const photovoltaicModulePower =
+    settings.photovoltaicModulePower
+    ?? defaultSettings.photovoltaicModulePower;
   const existingHeatingResult = calculateExistingHeating({
     existingHeating,
     heatingOilCalorificValue:
@@ -141,9 +145,10 @@ export default function PhotovoltaicCard() {
       existingHeatingResult.requiredHeatPumpElectricity ?? 0,
     electricVehicleElectricityDemand:
       electricVehicleResult.additionalElectricityDemand,
-    modulePower:
-      settings.photovoltaicModulePower
-      ?? defaultSettings.photovoltaicModulePower,
+    modulePower: photovoltaicModulePower,
+    safetyFactor:
+      settings.photovoltaicSafetyFactor
+      ?? defaultSettings.photovoltaicSafetyFactor,
     nightConsumptionShare:
       settings.photovoltaicNightConsumptionShare
       ?? defaultSettings.photovoltaicNightConsumptionShare,
@@ -151,25 +156,27 @@ export default function PhotovoltaicCard() {
       settings.photovoltaicStorageTolerance
       ?? defaultSettings.photovoltaicStorageTolerance,
   });
+  const desiredModules =
+    photovoltaic.desiredModules ?? result.recommendedModules;
   const desiredPhotovoltaicPower =
-    photovoltaic.desiredPower ?? result.actualPhotovoltaicPower;
+    (desiredModules * photovoltaicModulePower) / 1000;
 
-  const updateDesiredPhotovoltaicPower = (value: number) => {
+  const updateDesiredModules = (value: number) => {
     updateProject((currentProject) => ({
       ...currentProject,
       photovoltaic: {
         ...(currentProject.photovoltaic ?? defaultPhotovoltaic),
-        desiredPower: value,
+        desiredModules: value,
       },
     }));
   };
-  const handleDesiredPowerChange = (value: string) => {
-    setDesiredPowerInputValue(value);
+  const handleDesiredModulesChange = (value: string) => {
+    setDesiredModulesInputValue(value);
 
     const parsedValue = parseInputValue(value);
 
     if (parsedValue !== null) {
-      updateDesiredPhotovoltaicPower(parsedValue);
+      updateDesiredModules(Math.max(0, Math.round(parsedValue)));
     }
   };
 
@@ -202,35 +209,36 @@ export default function PhotovoltaicCard() {
 
           <div className="flex items-center justify-between gap-6 pt-1">
             <label
-              htmlFor="desired-photovoltaic-power"
+              htmlFor="desired-photovoltaic-modules"
               className="text-ekd-text-secondary"
             >
               Gewünschte Leistung
             </label>
 
             <div className="flex items-center gap-2 font-medium tabular-nums text-ekd-text">
+              <span className="text-ekd-text-secondary">Anz. Module</span>
               <input
-                id="desired-photovoltaic-power"
+                id="desired-photovoltaic-modules"
                 type="text"
-                inputMode="decimal"
+                inputMode="numeric"
                 value={
-                  isDesiredPowerFocused
-                    ? desiredPowerInputValue
-                    : formatInputValue(desiredPhotovoltaicPower)
+                  isDesiredModulesFocused
+                    ? desiredModulesInputValue
+                    : formatModuleInputValue(desiredModules)
                 }
-                onBlur={() => setIsDesiredPowerFocused(false)}
+                onBlur={() => setIsDesiredModulesFocused(false)}
                 onChange={(event) =>
-                  handleDesiredPowerChange(event.target.value)
+                  handleDesiredModulesChange(event.target.value)
                 }
                 onFocus={() => {
-                  setDesiredPowerInputValue(
-                    formatInputValue(desiredPhotovoltaicPower),
+                  setDesiredModulesInputValue(
+                    formatModuleInputValue(desiredModules),
                   );
-                  setIsDesiredPowerFocused(true);
+                  setIsDesiredModulesFocused(true);
                 }}
                 className="w-20 rounded-md border border-ekd-border bg-ekd-surface px-2 py-0.5 text-right shadow-sm transition focus:border-ekd-primary focus:outline-none focus:ring-2 focus:ring-ekd-primary"
               />
-              <span>kWp</span>
+              <span>{formatPower(desiredPhotovoltaicPower)}</span>
             </div>
           </div>
 

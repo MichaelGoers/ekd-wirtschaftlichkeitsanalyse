@@ -3,6 +3,7 @@ export interface PhotovoltaicRecommendationInput {
   heatPumpElectricityDemand: number;
   electricVehicleElectricityDemand: number;
   modulePower: number;
+  safetyFactor: number;
   nightConsumptionShare: number;
   storageTolerance: number;
 }
@@ -46,6 +47,7 @@ export function calculatePhotovoltaicRecommendation({
   heatPumpElectricityDemand,
   electricVehicleElectricityDemand,
   modulePower,
+  safetyFactor,
   nightConsumptionShare,
   storageTolerance,
 }: PhotovoltaicRecommendationInput): PhotovoltaicRecommendationResult {
@@ -53,8 +55,9 @@ export function calculatePhotovoltaicRecommendation({
     householdElectricityDemand
     + heatPumpElectricityDemand
     + electricVehicleElectricityDemand;
+  const designElectricityDemand = totalElectricityDemand * safetyFactor;
   const theoreticalModuleCount =
-    modulePower > 0 ? totalElectricityDemand / modulePower : 0;
+    modulePower > 0 ? designElectricityDemand / modulePower : 0;
   const recommendedModules = Math.ceil(theoreticalModuleCount);
   const recommendedPhotovoltaicPower =
     (theoreticalModuleCount * modulePower) / 1000;

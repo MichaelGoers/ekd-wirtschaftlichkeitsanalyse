@@ -43,7 +43,7 @@ const defaultElectricVehicle: ElectricVehicle = {
 };
 
 const defaultPhotovoltaic: Photovoltaic = {
-  desiredPower: null,
+  desiredModules: null,
 };
 
 export function calculateAnalysisEnergyValues(
@@ -81,6 +81,9 @@ export function calculateAnalysisEnergyValues(
       modulePower:
         project.settings.photovoltaicModulePower
         ?? defaultSettings.photovoltaicModulePower,
+      safetyFactor:
+        project.settings.photovoltaicSafetyFactor
+        ?? defaultSettings.photovoltaicSafetyFactor,
       nightConsumptionShare:
         project.settings.photovoltaicNightConsumptionShare
         ?? defaultSettings.photovoltaicNightConsumptionShare,
@@ -93,8 +96,10 @@ export function calculateAnalysisEnergyValues(
   const electricVehicleConsumption =
     electricVehicleResult.additionalElectricityDemand;
   const selectedPhotovoltaicPower =
-    photovoltaic.desiredPower
-    ?? photovoltaicRecommendation.actualPhotovoltaicPower;
+    ((photovoltaic.desiredModules
+      ?? photovoltaicRecommendation.recommendedModules)
+      * (project.settings.photovoltaicModulePower
+        ?? defaultSettings.photovoltaicModulePower)) / 1000;
 
   return {
     annualElectricityCost:

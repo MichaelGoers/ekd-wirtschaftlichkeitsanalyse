@@ -151,6 +151,19 @@ export default function SettingsPage() {
             Standardleistung eines PV-Moduls.
           </FieldDescription>
 
+          <NumberField
+            label="Sicherheits-Zuschlag"
+            value={settings.photovoltaicSafetyFactor}
+            suffix="Faktor"
+            withoutStepper
+            onChange={(value) =>
+              updateSetting("photovoltaicSafetyFactor", value)
+            }
+          />
+          <FieldDescription>
+            Faktor zur Erhöhung des Gesamtstrombedarfs für die Auslegung der empfohlenen PV-Leistung.
+          </FieldDescription>
+
           <PercentageField
             label="Nachtstromanteil"
             value={settings.photovoltaicNightConsumptionShare}
