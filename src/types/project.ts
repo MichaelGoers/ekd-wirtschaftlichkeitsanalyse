@@ -21,6 +21,7 @@ export interface HouseholdElectricity {
 export type HeatingSystemType = "gas" | "oil";
 
 export interface ExistingHeating {
+  heatPumpPlanned: boolean;
   type: HeatingSystemType;
   gasAnnualConsumption: number;
   gasMonthlyPayment: number;

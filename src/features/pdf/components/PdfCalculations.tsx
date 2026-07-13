@@ -12,38 +12,46 @@ interface PdfCalculationsProps {
 }
 
 export default function PdfCalculations({ result }: PdfCalculationsProps) {
+  const isPhotovoltaicOnly = result.operatingMode === "photovoltaic-only";
+
   return (
     <View style={pdfStyles.rightColumn}>
       <View style={pdfStyles.calculationsHeader}>
         <Text style={pdfStyles.eyebrow}>Berechnungsprotokoll</Text>
         <Text style={pdfStyles.calculationsTitle}>
-          Vergleich der drei Versorgungslösungen
+          {isPhotovoltaicOnly
+            ? "Vergleich der zwei Versorgungslösungen"
+            : "Vergleich der drei Versorgungslösungen"}
         </Text>
       </View>
 
-      <PdfCalculationCard
-        title="Wärmepumpe"
-        formulas={[
-          {
-            label: "Strombedarf",
-            parts: [
-              formatEnergy(result.heatPump.totalConsumption),
-              "×",
-              formatEnergyTariff(result.heatPump.electricityTariff),
-            ],
-            amount: formatPdfCurrency(
-              result.heatPump.annualElectricityCost,
-            ),
-          },
-        ]}
-        total={formatPdfCurrency(
-          result.heatPump.annualElectricityCost,
-        )}
-        savings={formatPdfCurrency(result.heatPump.annualSavings)}
-      />
+      {!isPhotovoltaicOnly && (
+        <PdfCalculationCard
+          title="Wärmepumpe"
+          formulas={[
+            {
+              label: "Strombedarf",
+              parts: [
+                formatEnergy(result.heatPump.totalConsumption),
+                "×",
+                formatEnergyTariff(result.heatPump.electricityTariff),
+              ],
+              amount: formatPdfCurrency(
+                result.heatPump.annualElectricityCost,
+              ),
+            },
+          ]}
+          total={formatPdfCurrency(
+            result.heatPump.annualElectricityCost,
+          )}
+          savings={formatPdfCurrency(result.heatPump.annualSavings)}
+        />
+      )}
 
       <PdfCalculationCard
-        title="Wärmepumpe + PV"
+        title={isPhotovoltaicOnly
+          ? "Photovoltaik + Speicher"
+          : "Wärmepumpe + PV"}
         formulas={[
           {
             label: "Einspeisevergütung",
@@ -71,7 +79,9 @@ export default function PdfCalculations({ result }: PdfCalculationsProps) {
       />
 
       <PdfCalculationCard
-        title="Wärmepumpe + PV + EKDFlow"
+        title={isPhotovoltaicOnly
+          ? "Photovoltaik + Speicher + EKDFlow"
+          : "Wärmepumpe + PV + EKDFlow"}
         formulas={[
           {
             label: "Einspeisevergütung",

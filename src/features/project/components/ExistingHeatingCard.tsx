@@ -4,15 +4,13 @@ import NumberField from "../../../components/ui/NumberField";
 import { calculateExistingHeating } from "../../../domain/calculation/services/calculateExistingHeating";
 import { defaultSettings } from "../../../domain/calculation/defaults/defaultSettings";
 import { useProjectStore } from "../../../store/projectStore";
-import type {
-  ExistingHeating,
-  HeatingSystemType,
-} from "../../../types/project";
+import type { ExistingHeating } from "../../../types/project";
 import { createExclusiveNumberUpdate } from "../../../utils/createExclusiveNumberUpdate";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import { formatEnergy } from "../../../utils/formatEnergy";
 
 const defaultExistingHeating: ExistingHeating = {
+  heatPumpPlanned: true,
   type: "gas",
   gasAnnualConsumption: 0,
   gasMonthlyPayment: 0,
@@ -30,24 +28,26 @@ function formatOptionalEnergy(value: number | null): string {
   return value === null ? "--" : formatEnergy(value);
 }
 
-interface HeatingTypeOptionProps {
+interface RadioOptionProps<T extends string> {
+  name: string;
   label: string;
-  value: HeatingSystemType;
-  selectedValue: HeatingSystemType;
-  onChange: (value: HeatingSystemType) => void;
+  value: T;
+  selectedValue: T;
+  onChange: (value: T) => void;
 }
 
-function HeatingTypeOption({
+function RadioOption<T extends string>({
+  name,
   label,
   value,
   selectedValue,
   onChange,
-}: HeatingTypeOptionProps) {
+}: RadioOptionProps<T>) {
   return (
     <label className="flex items-center gap-2 text-sm font-medium text-ekd-text-secondary">
       <input
         type="radio"
-        name="existing-heating-type"
+        name={name}
         value={value}
         checked={selectedValue === value}
         onChange={() => onChange(value)}
@@ -87,23 +87,47 @@ export default function ExistingHeatingCard() {
   };
 
   const isOilHeating = existingHeating.type === "oil";
+  const heatPumpPlanning = existingHeating.heatPumpPlanned
+    ? "planned"
+    : "not-planned";
 
   return (
     <Card title="Bestand Heizung" withLeftAccent>
-      <div className="flex gap-6">
-        <HeatingTypeOption
-          label="Gas"
-          value="gas"
-          selectedValue={existingHeating.type}
-          onChange={(value) => updateExistingHeating("type", value)}
+      <div className="flex flex-wrap gap-6">
+        <RadioOption
+          name="heat-pump-planning"
+          label="Keine Wärmepumpe geplant"
+          value="not-planned"
+          selectedValue={heatPumpPlanning}
+          onChange={() => updateExistingHeating("heatPumpPlanned", false)}
         />
-        <HeatingTypeOption
-          label="Heizöl"
-          value="oil"
-          selectedValue={existingHeating.type}
-          onChange={(value) => updateExistingHeating("type", value)}
+        <RadioOption
+          name="heat-pump-planning"
+          label="Wärmepumpe geplant"
+          value="planned"
+          selectedValue={heatPumpPlanning}
+          onChange={() => updateExistingHeating("heatPumpPlanned", true)}
         />
       </div>
+
+      {existingHeating.heatPumpPlanned && (
+        <>
+          <div className="flex gap-6">
+            <RadioOption
+              name="existing-heating-type"
+              label="Gas"
+              value="gas"
+              selectedValue={existingHeating.type}
+              onChange={(value) => updateExistingHeating("type", value)}
+            />
+            <RadioOption
+              name="existing-heating-type"
+              label="Heizöl"
+              value="oil"
+              selectedValue={existingHeating.type}
+              onChange={(value) => updateExistingHeating("type", value)}
+            />
+          </div>
 
       {isOilHeating ? (
         <>
@@ -212,7 +236,7 @@ export default function ExistingHeatingCard() {
               }));
             }}
           />
-        </>
+          </>
       )}
 
       <div className="rounded-xl border border-ekd-border bg-ekd-background p-4 shadow-sm shadow-ekd-text/5">
@@ -245,6 +269,8 @@ export default function ExistingHeatingCard() {
           </div>
         </dl>
       </div>
+        </>
+      )}
     </Card>
   );
 }

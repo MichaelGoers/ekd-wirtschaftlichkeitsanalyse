@@ -7,6 +7,12 @@ export interface InvestmentResult {
 export function calculateInvestment(
   project: Project,
 ): InvestmentResult {
+  if (!project.existingHeating.heatPumpPlanned) {
+    return {
+      totalInvestment: project.investment.photovoltaic,
+    };
+  }
+
   return {
     totalInvestment:
       project.investment.heatPump

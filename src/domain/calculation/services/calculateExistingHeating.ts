@@ -26,6 +26,14 @@ export function calculateExistingHeating({
   heatingOilCalorificValue,
   standardHeatPumpCop,
 }: ExistingHeatingInput): ExistingHeatingResult {
+  if (!existingHeating.heatPumpPlanned) {
+    return {
+      heatEnergy: null,
+      annualHeatingCost: null,
+      requiredHeatPumpElectricity: null,
+    };
+  }
+
   if (existingHeating.type === "oil") {
     const heatEnergy =
       existingHeating.oilAnnualConsumption > 0

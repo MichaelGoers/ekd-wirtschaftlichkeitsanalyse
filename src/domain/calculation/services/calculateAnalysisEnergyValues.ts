@@ -28,6 +28,7 @@ const defaultHouseholdElectricity: HouseholdElectricity = {
 };
 
 const defaultExistingHeating: ExistingHeating = {
+  heatPumpPlanned: true,
   type: "gas",
   gasAnnualConsumption: 0,
   gasMonthlyPayment: 0,

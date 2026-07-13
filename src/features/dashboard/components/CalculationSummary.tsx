@@ -11,6 +11,7 @@ import CurrentEnergyCostsCard from "./CurrentEnergyCostsCard";
 export default function CalculationSummary() {
   const project = useProjectStore((state) => state.project);
   const result = calculateAnalysis(project);
+  const isPhotovoltaicOnly = result.operatingMode === "photovoltaic-only";
 
   return (
     <div className="space-y-10">
@@ -23,8 +24,10 @@ export default function CalculationSummary() {
         </p>
         <p className="mt-3 text-lg text-ekd-primary-light">
           Über den Betrachtungszeitraum von{" "}
-          {result.analysisPeriodYears} Jahren mit Wärmepumpe,
-          PV-Anlage und EKDFlow
+          {result.analysisPeriodYears} Jahren mit{" "}
+          {isPhotovoltaicOnly
+            ? "Photovoltaikanlage und Speicher"
+            : "Wärmepumpe, PV-Anlage und EKDFlow"}
         </p>
       </section>
 
@@ -55,39 +58,45 @@ export default function CalculationSummary() {
             Berechnung im Detail
           </h2>
           <p className="mt-1 text-ekd-text-secondary">
-            Die jährlichen Energiekosten der drei betrachteten Lösungen
+            {isPhotovoltaicOnly
+              ? "Die jährlichen Energiekosten der zwei betrachteten Photovoltaik-Lösungen"
+              : "Die jährlichen Energiekosten der drei betrachteten Lösungen"}
           </p>
         </div>
 
         <div className="space-y-6">
-          <CalculationCard
-            title="Wärmepumpe"
-            formulas={[
-              {
-                label: "Strombedarf Wärmepumpe",
-                parts: [
-                  formatEnergy(result.heatPump.totalConsumption),
-                  "×",
-                  formatEnergyTariff(result.heatPump.electricityTariff),
-                ],
-                amount: formatCurrency(
+          {!isPhotovoltaicOnly && (
+            <CalculationCard
+              title="Wärmepumpe"
+              formulas={[
+                {
+                  label: "Strombedarf Wärmepumpe",
+                  parts: [
+                    formatEnergy(result.heatPump.totalConsumption),
+                    "×",
+                    formatEnergyTariff(result.heatPump.electricityTariff),
+                  ],
+                  amount: formatCurrency(
+                    result.heatPump.annualElectricityCost,
+                  ),
+                },
+              ]}
+              total={formatCurrency(
+                result.heatPump.annualElectricityCost,
+              )}
+              savings={formatCurrency(
+                calculateAnnualSavings(
+                  result.currentSituation.annualCost,
                   result.heatPump.annualElectricityCost,
                 ),
-              },
-            ]}
-            total={formatCurrency(
-              result.heatPump.annualElectricityCost,
-            )}
-            savings={formatCurrency(
-              calculateAnnualSavings(
-                result.currentSituation.annualCost,
-                result.heatPump.annualElectricityCost,
-              ),
-            )}
-          />
+              )}
+            />
+          )}
 
           <CalculationCard
-            title="Wärmepumpe + PV"
+            title={isPhotovoltaicOnly
+              ? "Photovoltaik + Speicher"
+              : "Wärmepumpe + PV"}
             formulas={[
               {
                 label: "Einspeisevergütung",
@@ -113,7 +122,9 @@ export default function CalculationSummary() {
           />
 
           <CalculationCard
-            title="Wärmepumpe + PV + EKDFlow"
+            title={isPhotovoltaicOnly
+              ? "Photovoltaik + Speicher + EKDFlow"
+              : "Wärmepumpe + PV + EKDFlow"}
             formulas={[
               {
                 label: "Einspeisevergütung",

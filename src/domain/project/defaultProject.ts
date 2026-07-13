@@ -27,6 +27,7 @@ export const defaultProject: Project = {
   },
 
   existingHeating: {
+    heatPumpPlanned: true,
     type: "gas",
     gasAnnualConsumption: 0,
     gasMonthlyPayment: 0,
@@ -69,6 +70,7 @@ export const defaultProject: Project = {
       recommendedStorage: 0,
     },
     analysis: {
+      operatingMode: "heat-pump",
       analysisPeriodYears: defaultSettings.analysisPeriodYears,
       currentSituation: {
         annualElectricityCost: 0,

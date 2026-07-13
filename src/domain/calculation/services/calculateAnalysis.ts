@@ -11,6 +11,9 @@ import { calculateAnalysisEnergyValues } from "./calculateAnalysisEnergyValues";
 export function calculateAnalysis(
   project: Project,
 ): CalculationResult {
+  const operatingMode = project.existingHeating.heatPumpPlanned
+    ? "heat-pump"
+    : "photovoltaic-only";
   const energyValues = calculateAnalysisEnergyValues(project);
   const currentSituation = calculateCurrentSituation(
     energyValues,
@@ -44,6 +47,7 @@ export function calculateAnalysis(
   );
 
   return {
+    operatingMode,
     analysisPeriodYears: project.settings.analysisPeriodYears,
     currentSituation,
     investment,

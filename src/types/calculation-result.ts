@@ -45,6 +45,8 @@ export interface HeatPumpPvEkdFlowResult {
 }
 
 export interface CalculationResult {
+  operatingMode: "heat-pump" | "photovoltaic-only";
+
   analysisPeriodYears: number;
 
   currentSituation: CurrentSituationResult;

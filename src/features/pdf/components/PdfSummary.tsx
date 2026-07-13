@@ -29,6 +29,8 @@ function SummaryLine({ label, value }: SummaryLineProps) {
 }
 
 export default function PdfSummary({ project, result }: PdfSummaryProps) {
+  const isPhotovoltaicOnly = result.operatingMode === "photovoltaic-only";
+
   return (
     <View style={pdfStyles.summary}>
       <View style={pdfStyles.advantageSection}>
@@ -47,14 +49,18 @@ export default function PdfSummary({ project, result }: PdfSummaryProps) {
       <View style={pdfStyles.section}>
         <SectionTitle>Investition</SectionTitle>
         <View style={pdfStyles.summaryRows}>
-          <SummaryLine
-            label="Wärmepumpenlösung"
-            value={formatPdfCurrency(project.investment.heatPump)}
-          />
-          <SummaryLine
-            label="KfW-Förderung"
-            value={formatPdfCurrency(-project.investment.kfwFunding)}
-          />
+          {!isPhotovoltaicOnly && (
+            <SummaryLine
+              label="Wärmepumpenlösung"
+              value={formatPdfCurrency(project.investment.heatPump)}
+            />
+          )}
+          {!isPhotovoltaicOnly && (
+            <SummaryLine
+              label="KfW-Förderung"
+              value={formatPdfCurrency(-project.investment.kfwFunding)}
+            />
+          )}
           <SummaryLine
             label="Photovoltaikanlage"
             value={formatPdfCurrency(project.investment.photovoltaic)}
@@ -71,12 +77,14 @@ export default function PdfSummary({ project, result }: PdfSummaryProps) {
       <View style={pdfStyles.section}>
         <SectionTitle>Aktuelle Energiekosten</SectionTitle>
         <View style={pdfStyles.summaryRows}>
-          <SummaryLine
-            label="Gas / Öl"
-            value={formatPdfCurrency(
-              result.currentSituation.annualHeatingCost,
-            )}
-          />
+          {!isPhotovoltaicOnly && (
+            <SummaryLine
+              label="Gas / Öl"
+              value={formatPdfCurrency(
+                result.currentSituation.annualHeatingCost,
+              )}
+            />
+          )}
           <SummaryLine
             label="Strom"
             value={formatPdfCurrency(
