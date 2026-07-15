@@ -1,3 +1,4 @@
+import { supabase } from "../../lib/supabase";
 import { calculateAnalysis } from "../calculation/services/calculateAnalysis";
 import { calculateElectricVehicle } from "../calculation/services/calculateElectricVehicle";
 import { calculateExistingHeating } from "../calculation/services/calculateExistingHeating";
@@ -14,10 +15,6 @@ import type {
   ProjectCalculatedValues,
 } from "../../types/project";
 
-const currentProjectStorageKey = "ekd-current-project";
-const projectsStorageKey = "ekd-projects";
-const currentProjectIdStorageKey = "ekd-current-project-id";
-const legacyProjectStoreKey = "ekd-project-store";
 const autosaveDelayMs = 500;
 
 const defaultHouseholdElectricity: HouseholdElectricity =
@@ -26,6 +23,14 @@ const defaultExistingHeating: ExistingHeating =
   defaultProject.existingHeating;
 const defaultElectricVehicle: ElectricVehicle =
   defaultProject.electricVehicle;
+
+interface SupabaseProjectRow {
+  id: string;
+  customer_name: string;
+  project_data: Partial<Project> | null;
+  created_at: string;
+  updated_at: string;
+}
 
 type LegacyPhotovoltaic = Partial<Photovoltaic> & {
   desiredPower?: number | null;
@@ -45,86 +50,6 @@ function createProjectId(): string {
 
 function getCurrentTimestamp(): string {
   return new Date().toISOString();
-}
-
-function isBrowserStorageAvailable(): boolean {
-  return typeof localStorage !== "undefined";
-}
-
-function parseStoredProject(value: string | null): unknown {
-  if (value === null) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(value);
-  } catch {
-    return null;
-  }
-}
-
-function readCurrentStoredProject(): Partial<Project> | null {
-  if (!isBrowserStorageAvailable()) {
-    return null;
-  }
-
-  const storedValue = parseStoredProject(
-    localStorage.getItem(currentProjectStorageKey),
-  );
-
-  return storedValue !== null && typeof storedValue === "object"
-    ? (storedValue as Partial<Project>)
-    : null;
-}
-
-function readStoredProjects(): Partial<Project>[] {
-  if (!isBrowserStorageAvailable()) {
-    return [];
-  }
-
-  const storedValue = parseStoredProject(
-    localStorage.getItem(projectsStorageKey),
-  );
-
-  return Array.isArray(storedValue)
-    ? (storedValue as Partial<Project>[])
-    : [];
-}
-
-function readCurrentProjectId(): string | null {
-  if (!isBrowserStorageAvailable()) {
-    return null;
-  }
-
-  return localStorage.getItem(currentProjectIdStorageKey);
-}
-
-function readLegacyStoredProject(): Partial<Project> | null {
-  if (!isBrowserStorageAvailable()) {
-    return null;
-  }
-
-  const storedValue = parseStoredProject(
-    localStorage.getItem(legacyProjectStoreKey),
-  );
-
-  if (
-    storedValue !== null
-    && typeof storedValue === "object"
-    && "state" in storedValue
-  ) {
-    const legacyState = storedValue.state;
-
-    if (
-      legacyState !== null
-      && typeof legacyState === "object"
-      && "project" in legacyState
-    ) {
-      return legacyState.project as Partial<Project>;
-    }
-  }
-
-  return null;
 }
 
 function calculateProjectValues(project: Project): ProjectCalculatedValues {
@@ -242,44 +167,14 @@ function completeProject(
   };
 }
 
-function writeProjectCollection(projects: Project[]): void {
-  if (!isBrowserStorageAvailable()) {
-    return;
-  }
-
-  localStorage.setItem(projectsStorageKey, JSON.stringify(projects));
-}
-
-function updateCurrentProjectStorage(project: Project): void {
-  if (!isBrowserStorageAvailable()) {
-    return;
-  }
-
-  localStorage.setItem(currentProjectIdStorageKey, project.metadata.id);
-  localStorage.setItem(currentProjectStorageKey, JSON.stringify(project));
-}
-
-function persistProject(project: Project): void {
-  if (!isBrowserStorageAvailable()) {
-    return;
-  }
-
-  const projects = readStoredProjects()
-    .map((storedProject) =>
-      completeProject(storedProject, {
-        preserveUpdatedAt: true,
-      }),
+function getSupabaseClient() {
+  if (supabase === null) {
+    throw new Error(
+      "Supabase ist nicht konfiguriert. VITE_SUPABASE_URL und VITE_SUPABASE_ANON_KEY müssen gesetzt sein.",
     );
-  const existingProjectIndex = projects.findIndex(
-    (storedProject) => storedProject.metadata.id === project.metadata.id,
-  );
-  const nextProjects =
-    existingProjectIndex >= 0
-      ? projects.with(existingProjectIndex, project)
-      : [...projects, project];
+  }
 
-  writeProjectCollection(nextProjects);
-  updateCurrentProjectStorage(project);
+  return supabase;
 }
 
 class ProjectService {
@@ -287,91 +182,74 @@ class ProjectService {
 
   private autosaveTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  loadProject(): Project {
-    const storedProjects = this.listProjects();
-    const currentProjectId = readCurrentProjectId();
-    const currentProjectFromCollection =
-      storedProjects.find(
-        (project) => project.metadata.id === currentProjectId,
-      ) ?? storedProjects.at(0) ?? null;
-    const currentStoredProject = readCurrentStoredProject();
-    const storedProject =
-      currentProjectFromCollection ??
-      currentStoredProject ??
-      readLegacyStoredProject();
-    const project = completeProject(storedProject, {
-      preserveUpdatedAt: true,
-    });
+  createEmptyProject(): Project {
+    return completeProject(null, { preserveUpdatedAt: false });
+  }
+
+  async loadProject(): Promise<Project> {
+    const projects = await this.listProjects();
+    const project = projects.at(0) ?? this.createEmptyProject();
 
     this.currentProject = project;
-
-    if (currentStoredProject === null) {
-      this.saveProject(project);
-    }
 
     return project;
   }
 
-  listProjects(): Project[] {
-    const storedProjects = readStoredProjects().map((storedProject) =>
-      completeProject(storedProject, {
-        preserveUpdatedAt: true,
-      }),
-    );
+  async listProjects(): Promise<Project[]> {
+    const client = getSupabaseClient();
+    const { data, error } = await client
+      .from("projects")
+      .select("id, customer_name, project_data, created_at, updated_at")
+      .order("created_at", { ascending: false });
 
-    if (this.currentProject === null) {
-      return storedProjects;
+    if (error !== null) {
+      throw error;
     }
 
-    const hasCurrentProject = storedProjects.some(
-      (project) =>
-        project.metadata.id === this.currentProject?.metadata.id,
+    return (data ?? []).map((row) =>
+      this.fromSupabaseRow(row as SupabaseProjectRow),
     );
-
-    return hasCurrentProject
-      ? storedProjects.map((project) =>
-          project.metadata.id === this.currentProject?.metadata.id
-            ? this.currentProject
-            : project,
-        )
-      : [...storedProjects, this.currentProject];
   }
 
-  openProject(projectId: string): Project {
-    const project = this.listProjects().find(
-      (storedProject) => storedProject.metadata.id === projectId,
-    );
+  async openProject(projectId: string): Promise<Project> {
+    const client = getSupabaseClient();
+    const { data, error } = await client
+      .from("projects")
+      .select("id, customer_name, project_data, created_at, updated_at")
+      .eq("id", projectId)
+      .maybeSingle();
 
-    if (project === undefined) {
+    if (error !== null) {
+      throw error;
+    }
+
+    if (data === null) {
       return this.getCurrentProject();
     }
 
+    const project = this.fromSupabaseRow(data as SupabaseProjectRow);
     this.currentProject = project;
-    this.saveProject(project);
 
     return project;
   }
 
   getCurrentProject(): Project {
-    if (this.currentProject === null) {
-      return this.loadProject();
-    }
-
-    return this.currentProject;
+    return this.currentProject ?? this.createEmptyProject();
   }
 
-  createProject(): Project {
-    const project = completeProject(null, {
-      preserveUpdatedAt: false,
-    });
-
+  setCurrentProject(project: Project): void {
     this.currentProject = project;
-    this.saveProject(project);
+  }
+
+  async createProject(): Promise<Project> {
+    const project = this.createEmptyProject();
+    this.currentProject = project;
+    await this.saveProject(project);
 
     return project;
   }
 
-  duplicateCurrentProject(): Project {
+  async duplicateCurrentProject(): Promise<Project> {
     const currentProject = this.getCurrentProject();
     const duplicatedProject = completeProject(
       {
@@ -389,36 +267,28 @@ class ProjectService {
     );
 
     this.currentProject = duplicatedProject;
-    this.saveProject(duplicatedProject);
+    await this.saveProject(duplicatedProject);
 
     return duplicatedProject;
   }
 
-  deleteProject(projectId: string): Project {
-    const currentProject = this.getCurrentProject();
-    const remainingProjects = this.listProjects().filter(
-      (project) => project.metadata.id !== projectId,
-    );
-    const isDeletingCurrentProject =
-      currentProject.metadata.id === projectId;
-    const nextProjects =
-      remainingProjects.length > 0
-        ? remainingProjects
-        : [
-            completeProject(null, {
-              preserveUpdatedAt: false,
-            }),
-          ];
-    const nextProject = isDeletingCurrentProject
-      ? nextProjects[0]
-      : currentProject;
+  async deleteProject(projectId: string): Promise<Project> {
+    const client = getSupabaseClient();
+    const { error } = await client
+      .from("projects")
+      .delete()
+      .eq("id", projectId);
 
-    this.clearAutosave();
-    writeProjectCollection(nextProjects);
-    this.currentProject = nextProject;
-    updateCurrentProjectStorage(nextProject);
+    if (error !== null) {
+      throw error;
+    }
 
-    return nextProject;
+    if (this.currentProject?.metadata.id === projectId) {
+      this.clearAutosave();
+      this.currentProject = this.createEmptyProject();
+    }
+
+    return this.getCurrentProject();
   }
 
   setProject(project: Project): Project {
@@ -436,16 +306,58 @@ class ProjectService {
     return this.setProject(updater(this.getCurrentProject()));
   }
 
-  saveProject(project = this.getCurrentProject()): void {
+  async saveProject(project = this.getCurrentProject()): Promise<void> {
     this.clearAutosave();
-    persistProject(project);
+
+    const client = getSupabaseClient();
+    const { error } = await client
+      .from("projects")
+      .upsert(this.toSupabaseRow(project), { onConflict: "id" });
+
+    if (error !== null) {
+      throw error;
+    }
+  }
+
+  private fromSupabaseRow(row: SupabaseProjectRow): Project {
+    const projectData = row.project_data ?? {};
+
+    return completeProject(
+      {
+        ...projectData,
+        metadata: {
+          id: row.id,
+          version: projectData.metadata?.version ?? 1,
+          name: projectData.metadata?.name ?? "",
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+        },
+        customer: {
+          ...projectData.customer,
+          name: projectData.customer?.name ?? row.customer_name,
+        },
+      },
+      { preserveUpdatedAt: true },
+    );
+  }
+
+  private toSupabaseRow(project: Project): SupabaseProjectRow {
+    return {
+      id: project.metadata.id,
+      customer_name: project.customer.name,
+      project_data: project,
+      created_at: project.metadata.createdAt,
+      updated_at: project.metadata.updatedAt,
+    };
   }
 
   private scheduleAutosave(project: Project): void {
     this.clearAutosave();
 
     this.autosaveTimeout = setTimeout(() => {
-      persistProject(project);
+      void this.saveProject(project).catch((error: unknown) => {
+        console.error("Projekt konnte nicht gespeichert werden.", error);
+      });
       this.autosaveTimeout = null;
     }, autosaveDelayMs);
   }

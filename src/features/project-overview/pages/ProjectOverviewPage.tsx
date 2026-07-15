@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { projectService } from "../../../domain/project/projectService";
 import { useProjectStore } from "../../../store/projectStore";
 import type { Project } from "../../../types/project";
 import { formatEnergyAmount } from "../../../utils/formatEnergyAmount";
@@ -32,42 +31,21 @@ function getProjectTitle(project: Project): string {
   ].join(" • ");
 }
 
-function sortProjects(projects: Project[]): Project[] {
-  return [...projects].sort((firstProject, secondProject) => {
-    const customerComparison = getCustomerName(firstProject).localeCompare(
-      getCustomerName(secondProject),
-      "de-DE",
-      { sensitivity: "base" },
-    );
-
-    if (customerComparison !== 0) {
-      return customerComparison;
-    }
-
-    const desiredPowerComparison =
-      getDesiredPhotovoltaicPower(firstProject) -
-      getDesiredPhotovoltaicPower(secondProject);
-
-    if (desiredPowerComparison !== 0) {
-      return desiredPowerComparison;
-    }
-
-    return (
-      new Date(secondProject.metadata.updatedAt).getTime() -
-      new Date(firstProject.metadata.updatedAt).getTime()
-    );
-  });
-}
-
 export default function ProjectOverviewPage() {
   const navigate = useNavigate();
   const deleteProject = useProjectStore((state) => state.deleteProject);
+  const loadProjects = useProjectStore((state) => state.loadProjects);
   const openProject = useProjectStore((state) => state.openProject);
-  useProjectStore((state) => state.project.metadata.updatedAt);
+  const projects = useProjectStore((state) => state.projects);
   const [projectIdPendingDeletion, setProjectIdPendingDeletion] =
     useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const projects = projectService.listProjects();
+  useEffect(() => {
+    void loadProjects().catch((error: unknown) => {
+      console.error("Projekte konnten nicht geladen werden.", error);
+    });
+  }, [loadProjects]);
+
   const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase("de-DE");
   const visibleProjects =
     normalizedSearchTerm.length === 0
@@ -77,16 +55,16 @@ export default function ProjectOverviewPage() {
             .toLocaleLowerCase("de-DE")
             .includes(normalizedSearchTerm),
         );
-  const filteredProjects = sortProjects(visibleProjects);
+  const filteredProjects = visibleProjects;
 
 
-  const handleOpenProject = (projectId: string) => {
-    openProject(projectId);
+  const handleOpenProject = async (projectId: string) => {
+    await openProject(projectId);
     navigate("/project");
   };
 
-  const handleDeleteProject = (projectId: string) => {
-    deleteProject(projectId);
+  const handleDeleteProject = async (projectId: string) => {
+    await deleteProject(projectId);
     setProjectIdPendingDeletion(null);
   };
 
@@ -118,7 +96,7 @@ export default function ProjectOverviewPage() {
                 <div className="flex items-center gap-4 rounded-2xl border-l-4 border-ekd-primary bg-ekd-surface px-6 py-3 shadow-sm shadow-ekd-text/5 ring-1 ring-ekd-border transition hover:bg-ekd-background">
                   <button
                     type="button"
-                    onClick={() => handleOpenProject(project.metadata.id)}
+                    onClick={() => void handleOpenProject(project.metadata.id)}
                     className="min-w-0 flex-1 text-left focus:outline-none focus:ring-2 focus:ring-ekd-primary"
                   >
                     <span className="block truncate text-base font-normal leading-6 text-ekd-text">
@@ -170,9 +148,7 @@ export default function ProjectOverviewPage() {
 
                       <button
                         type="button"
-                        onClick={() =>
-                          handleDeleteProject(project.metadata.id)
-                        }
+                        onClick={() => void handleDeleteProject(project.metadata.id)}
                         className="rounded-lg border border-ekd-border bg-ekd-surface px-4 py-2 text-sm font-medium text-ekd-text shadow-sm transition hover:bg-ekd-background focus:outline-none focus:ring-2 focus:ring-ekd-primary"
                       >
                         Löschen

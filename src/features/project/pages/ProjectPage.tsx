@@ -14,13 +14,13 @@ export default function ProjectPage() {
   const createProject = useProjectStore((state) => state.createProject);
   const duplicateProject = useProjectStore((state) => state.duplicateProject);
 
-  const handleCreateProject = () => {
-    createProject();
+  const handleCreateProject = async () => {
+    await createProject();
     navigate("/project");
   };
 
-  const handleDuplicateProject = () => {
-    duplicateProject();
+  const handleDuplicateProject = async () => {
+    await duplicateProject();
     navigate("/project");
   };
 
@@ -42,7 +42,7 @@ export default function ProjectPage() {
           <div className="flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={handleCreateProject}
+              onClick={() => void handleCreateProject()}
               className="rounded-lg border border-ekd-border bg-ekd-surface px-4 py-2 text-sm font-medium text-ekd-text shadow-sm transition hover:bg-ekd-background focus:outline-none focus:ring-2 focus:ring-ekd-primary"
             >
               Neues Projekt
@@ -50,7 +50,7 @@ export default function ProjectPage() {
 
             <button
               type="button"
-              onClick={handleDuplicateProject}
+              onClick={() => void handleDuplicateProject()}
               className="rounded-lg border border-ekd-border bg-ekd-surface px-4 py-2 text-sm font-medium text-ekd-text shadow-sm transition hover:bg-ekd-background focus:outline-none focus:ring-2 focus:ring-ekd-primary"
             >
               Variante erstellen
